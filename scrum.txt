@@ -1,26 +1,26 @@
  2025-09-26
 
  Jonathan
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? N/A
+ What will I do today? Create repository. Watch the project setup video.
+ What impediments are blocking me? N/A
 
  Elizabeth
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? N/A
+ What will I do today? Create Trello for project. Watch the project setup video.
+ What impediments are blocking me? N/A
 
  2025-09-28
 
  Jonathan
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? Created the Github repository and connected to Heroku.
+ What will I do today? Figure out why connection doesn't work between Github and Heroku.
+ What impediments are blocking me? Connections not working.
 
  Elizabeth
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? Created S3 and RDS storage.
+ What will I do today? Figure out why connection doesn't work between Github and Heroku.
+ What impediments are blocking me? Connections not working.
 
  2025-09-29
 
