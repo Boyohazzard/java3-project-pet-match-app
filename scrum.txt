@@ -25,14 +25,14 @@
  2025-09-29
 
  Jonathan
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? Created and synced project dependencies.
+ What will I do today? Work on registration and login for users.
+ What impediments are blocking me? Need to watch Spring security video.
 
  Elizabeth
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? Connection between Github and Heroku fixed. 
+ What will I do today? Update user stories. Create html templates for header, footer, index.
+ What impediments are blocking me? S3 connection setup not complete.
 
  2025-09-30
 
