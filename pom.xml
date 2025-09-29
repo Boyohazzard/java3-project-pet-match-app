@@ -28,24 +28,27 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <!-- FIX: Explicitly defining the AWS SDK version here is REQUIRED to resolve
+             the version property conflict with the parent POM. -->
+        <aws-sdk.version>2.25.10</aws-sdk.version>
     </properties>
+
     <dependencyManagement>
         <dependencies>
+            <!-- BOM uses the newly defined property to ensure successful version lookup -->
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>2.25.10</version> <type>pom</type>
+                <version>${aws-sdk.version}</version>
+                <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>software.amazon.awssdk</groupId>
-                <artifactId>s3</artifactId>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
 
     <dependencies>
+        <!-- Core Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -71,20 +74,25 @@
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
 
-        <!-- START: Dependencies added for AWS S3 Integration -->
-        <!-- 1. The main S3 client library (version inherited from the BOM) -->
+        <!-- START: AWS S3 Dependencies -->
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
+            <!-- Version is successfully inherited from the BOM. -->
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>regions</artifactId>
+            <!-- Required for the Region class. Version is successfully inherited from the BOM. -->
         </dependency>
 
-        <!-- 2. Good utility for working with streams, which S3 often requires -->
+        <!-- Utility dependency for file streams -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.16.1</version>
         </dependency>
-        <!-- END: Dependencies added for AWS S3 Integration -->
+        <!-- END: AWS S3 Dependencies -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
