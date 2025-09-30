@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Welcome to normal Home</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <h1>Welcome to loser home, loser</h1>
+
+</div>
+<h3><a th:href="@{/admin/home}">admin</a></h3>
+<h3><a th:href="@{/staff/home}">staff</a></h3>
+<h3><a th:href="@{/user/home}">users</a></h3>
+<h3><a th:href="@{/logout}">logout</a></h3>
+</body>
+</html>
