@@ -1,6 +1,7 @@
 package edu.java3projectpetmatchapp.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class RegistrationForm {
 
     @NotBlank
     @Email
+    @Size(max = 360)
     private String email;
 
     @NotBlank
