@@ -21,8 +21,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity.authorizeHttpRequests(registry->{
                 // Public pages and static resources (needed for Bootstrap)
-                    registry.requestMatchers("/index", "/", "/home", "/register", "/login").permitAll();
-                    registry.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
+                    registry.requestMatchers("/index", "/", "/home", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll();
 
                 // Roll-based access
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
