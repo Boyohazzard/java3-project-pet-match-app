@@ -1,0 +1,62 @@
+!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/header.html :: header-head}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header.html :: header-nav}"></div>
+
+<main class="container mt-4 mb-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg p-3">
+                <div class="card-body">
+                    <h2 class="mb-4 text-center">Login</h2>
+
+                    <form th:action="@{/login}" th:object="${login}" method="post">
+                        <div th:if="${fields.hasGlobalErrors()}" class="alert alert-danger"
+                             role="alert">
+                            <p th:each="err: ${#fields.globalErrors()}" th:text="${err}"></p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email"
+                                   id="email"
+                                   class="form-control"
+                                   th:field="*{email}"
+                                   th:errorclass="is-invalid">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password"
+                                   id="password"
+                                   class="form-control"
+                                   th:field="*{password}"
+                                   th:errorclass="is-invalid">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}"
+                                 th:errors="*{password}"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <small>Don't have an account yet?
+                            <a th:ref="@{/register}">Register here</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div th:replace="~{fragments/footer.html :: footer-fragment}"></div>
+
+</body>
+</html>
