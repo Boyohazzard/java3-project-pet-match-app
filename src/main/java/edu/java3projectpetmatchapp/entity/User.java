@@ -1,5 +1,7 @@
 package edu.java3projectpetmatchapp.entity;
 
+import edu.java3projectpetmatchapp.enums.PetPreference;
+import edu.java3projectpetmatchapp.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
