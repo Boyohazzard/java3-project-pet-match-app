@@ -30,7 +30,11 @@ public class SecurityConfiguration {
                     registry.anyRequest().authenticated();
                 })
 
-                .formLogin(form -> form.loginPage("/login").permitAll())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll())
                 .build();
     }
 
