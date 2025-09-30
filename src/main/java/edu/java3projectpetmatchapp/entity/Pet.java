@@ -21,9 +21,6 @@ public class Pet {
 
     @PrePersist
     public void assignDefaults() {
-        if (this.availability == null) {
-            this.availability = Availability.AVAILABLE;
-        }
         if (this.sociability == null) {
             this.sociability = Sociability.UNKNOWN;
         }
@@ -37,7 +34,7 @@ public class Pet {
     @NotBlank
     @Size(min = 2, max = 40,
             message="Name must be between 2 and 40 characters")
-    @Column(name = "pet_name", nullable = false, length = 40)
+    @Column(name = "pet_name", length = 40, nullable = false)
     private String petName;
 
     @Enumerated(EnumType.STRING)
@@ -47,6 +44,7 @@ public class Pet {
     @Column(name = "pet_breed", length = 100)
     private String petBreed;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "sociability", length = 200)
     private Sociability sociability;
 
@@ -62,12 +60,11 @@ public class Pet {
     @Column(name = "age", length = 3)
     private int age;
 
-    @Column(name = "pet_arrival_date", nullable = false)
-    private Date petArrivalDate;
+    @Column(name = "date_pet_sheltered", nullable = false)
+    private Date datePetSheltered;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", length = 50, nullable = false)
-    private Availability availability;
+    private Availability availability = Availability.AVAILABLE;
 }
-
-*/
+ */

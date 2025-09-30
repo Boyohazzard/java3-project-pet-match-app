@@ -37,13 +37,13 @@
  2025-09-30
 
  Jonathan
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? Set up registration form, routing, and logic
+ What will I do today? Create article entity and update User and Pet to have photo urls
+ What impediments are blocking me? lack of knowledge
 
  Elizabeth
- What did I do yesterday?
- What will I do today?
+ What did I do yesterday? Set up fragments and templates with header, footer, index, etc
+ What will I do today? registration.html, profile.html, login.html
  What impediments are blocking me?
 
  2025-10-01
