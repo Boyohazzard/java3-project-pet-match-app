@@ -27,7 +27,6 @@ public class SecurityConfiguration {
                 // Roll-based access
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.requestMatchers("/staff/**").hasRole("STAFF");
-                    registry.requestMatchers("/user/**").hasRole("USER");
 
                     registry.anyRequest().authenticated();
                 })
