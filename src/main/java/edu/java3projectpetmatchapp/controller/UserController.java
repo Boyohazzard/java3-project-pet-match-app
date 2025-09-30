@@ -1,7 +1,6 @@
 package edu.java3projectpetmatchapp.controller;
 
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
-import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -16,21 +15,28 @@ public class UserController {
 
     private UserService userService;
 
+    // routes for everyone
     @GetMapping({"/", "/index", "/home"})
     public String viewIndex() {
         return "index";
     }
 
-    @GetMapping( "/staff/home")
-    public String viewStaffIndex() {
-        return "staff/home";
+    @GetMapping("/login")
+    public String viewLogin() {
+        return "login";
     }
 
-    @GetMapping("/admin/home")
-    public String viewAdminIndex() {
-        return "admin/home";
+    @GetMapping("/logout")
+    public String viewLogout() {
+        return "logout";
     }
 
+    @PostMapping("/logout")
+    public String logout() {
+        return "index";
+    }
+
+    // routes for USER
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("registrationForm", new RegistrationForm());
@@ -57,22 +63,8 @@ public class UserController {
         return "redirect:/login";
     }
 
-
-    @GetMapping("/login")
-    public String viewLogin() {
-        return "login";
-
-    }
-
     @GetMapping("/profile")
     public String viewProfile() {
-        return "profile";
-    }
-
-    @PostMapping("/logout")
-    public String logout() {
-        return "index";
+        return "userprofile";
     }
 }
-
-

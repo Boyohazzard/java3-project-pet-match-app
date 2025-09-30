@@ -62,8 +62,8 @@ public class Pet {
     @Column(name = "age", length = 3)
     private int age;
 
-    @Column(name = "arrival_date", nullable = false)
-    private Date arrivalDate;
+    @Column(name = "pet_arrival_date", nullable = false)
+    private Date petArrivalDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", length = 50, nullable = false)
