@@ -20,13 +20,19 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity.authorizeHttpRequests(registry->{
-                    registry.requestMatchers("/index", "/", "/home", "/register").permitAll();
+                // Public pages and static resources (needed for Bootstrap)
+                    registry.requestMatchers("/index", "/", "/home", "/register", "/login").permitAll();
+                    registry.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
+
+                // Roll-based access
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.requestMatchers("/staff/**").hasRole("STAFF");
                     registry.requestMatchers("/user/**").hasRole("USER");
+
                     registry.anyRequest().authenticated();
                 })
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+
+                .formLogin(form -> form.loginPage("/login").permitAll())
                 .build();
     }
 
