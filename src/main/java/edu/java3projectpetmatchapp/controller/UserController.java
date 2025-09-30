@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public String viewLogout() {
-        return "logout";
+        return "index";
     }
 
     @PostMapping("/logout")
@@ -40,7 +40,7 @@ public class UserController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("registrationForm", new RegistrationForm());
-        return "register";
+        return "registration";
     }
 
     @PostMapping("/register")
@@ -50,14 +50,14 @@ public class UserController {
             Model model) {
 
         if (result.hasErrors()) {
-            return "register";
+            return "registration";
         }
 
         try {
             userService.registerNewUser(form);
         } catch (IllegalArgumentException e) {
             result.rejectValue("confirmPassword", "error.confirmPassword", e.getMessage());
-            return "register";
+            return "registration";
         }
 
         return "redirect:/login";
