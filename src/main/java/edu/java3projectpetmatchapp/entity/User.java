@@ -35,18 +35,18 @@ public class User {
     @NotBlank
     @Size(min = 2, max = 40,
             message="Name must be between 1 and 40 characters")
-    @Column(name = "first_name", nullable = false, length = 40)
+    @Column(name = "first_name", length = 40, nullable = false)
     private String firstName;
 
     @NotBlank
     @Size(min = 2, max = 40,
             message="Name must be between 1 and 40 characters")
-    @Column(name = "last_name", nullable = false, length = 40)
+    @Column(name = "last_name", length = 40, nullable = false)
     private String lastName;
 
     @NotBlank
     @Email
-    @Column(name = "email", nullable = false, length = 360, unique = true)
+    @Column(name = "email", length = 360, nullable = false, unique = true)
     private String email;
 
     @NotBlank
@@ -56,7 +56,7 @@ public class User {
     @Transient
     private String confirmPassword;
 
-    @Column(length = 500, name = "user_bio")
+    @Column(name = "user_bio", length = 500)
     private String bio;
 
     @Enumerated(EnumType.STRING)
@@ -66,4 +66,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", length = 10, nullable = false)
     private Role role;
+
+    @Column(name = "user_photo_url")
+    private String userPhotoUrl;
 }
