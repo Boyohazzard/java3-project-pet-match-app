@@ -24,6 +24,12 @@
 <div sec:authorize="!hasRole('ADMIN')">
     <p>You do not have admin access.</p>
 </div>
+<div sec:authorize="hasRole('STAFF')">
+    <p>STAFF content visible.</p>
+</div>
+<div sec:authorize="!hasRole('STAFF')">
+    <p>You do not have STAFF access.</p>
+</div>
 
 </body>
 </html>

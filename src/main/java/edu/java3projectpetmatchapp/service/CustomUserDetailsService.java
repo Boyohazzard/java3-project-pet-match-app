@@ -57,7 +57,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        System.out.println("Assigning role: " + user.getRole().name());
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())

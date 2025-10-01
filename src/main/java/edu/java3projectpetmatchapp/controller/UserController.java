@@ -5,7 +5,6 @@ import edu.java3projectpetmatchapp.dto.RegistrationForm;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -88,7 +87,6 @@ public class UserController {
         String email = principal.getName();
         ProfileData profileData = userService.getProfileData(email);
         model.addAttribute("user", profileData.getUser());
-        model.addAttribute("applications", profileData.getApplications());
         return "staff/dashboard";
     }
 
@@ -99,7 +97,6 @@ public class UserController {
         String email = principal.getName();
         ProfileData profileData = userService.getProfileData(email);
         model.addAttribute("user", profileData.getUser());
-        model.addAttribute("applications", profileData.getApplications());
         return "admin/dashboard";
     }
 }
