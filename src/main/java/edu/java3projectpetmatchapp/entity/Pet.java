@@ -15,7 +15,7 @@ import java.util.EnumSet;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "pets")
+@Table(name = "pets_table")
 public class Pet {
 
     @PrePersist
