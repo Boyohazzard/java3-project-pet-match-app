@@ -4,6 +4,7 @@ import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
+import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +21,14 @@ import java.security.Principal;
 @Controller
 public class UserController {
 
-    @Autowired
-    private CustomUserDetailsService userService;
+    private final CustomUserDetailsService userService;
+    private final S3StorageService s3Service;
+
+    // Required for 'final' fields.
+    public UserController(CustomUserDetailsService userService, S3StorageService s3Service) {
+        this.userService = userService;
+        this.s3Service = s3Service;
+    }
 
     // routes for everyone
     @GetMapping({"/", "/index", "/home"})
@@ -30,6 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
+
     public String viewLogin() {
         return "login";
     }
