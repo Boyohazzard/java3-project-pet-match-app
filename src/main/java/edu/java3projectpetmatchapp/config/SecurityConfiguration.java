@@ -2,15 +2,11 @@ package edu.java3projectpetmatchapp.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -18,22 +14,23 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        return httpSecurity.authorizeHttpRequests(registry->{
-                // Public pages and static resources (needed for Bootstrap)
-                    registry.requestMatchers("/index", "/", "/home", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll();
-
-                // Roll-based access
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .authorizeHttpRequests(registry -> {
+                    registry.requestMatchers("/index", "/", "/home", "/register", "/login", "/error").permitAll();
+                    registry.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
+                    registry.requestMatchers(HttpMethod.GET, "/register").permitAll();
+                    registry.requestMatchers(HttpMethod.POST, "/register").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.requestMatchers("/staff/**").hasRole("STAFF");
 
                     registry.anyRequest().authenticated();
                 })
-
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error")
+                        .defaultSuccessUrl("/profile", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -45,7 +42,7 @@ public class SecurityConfiguration {
                 .build();
     }
 
-    @Bean
+    /*@Bean
     public UserDetailsService userDetailService() {
         UserDetails normalLoser = User.builder()
                 .username("jg")
@@ -59,7 +56,7 @@ public class SecurityConfiguration {
                 .build();
         return new InMemoryUserDetailsManager(normalLoser, adminUser);
     }
-
+*/
     @Bean
     PasswordEncoder passwordEncoder () {
         return new BCryptPasswordEncoder();

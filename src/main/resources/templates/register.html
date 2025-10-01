@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/header.html :: header-head}">
 </head>
@@ -14,12 +14,7 @@
                 <div class="card-body">
                 <h2 class="mb-4 text-center">Registration</h2>
 
-                <form th:action="@{/register}" th:object="${registration}" method="post">
-                    <div th:if="${fields.hasGlobalErrors()}" class="alert alert-danger"
-                         role="alert">
-                        <p th:each="err: ${#fields.globalErrors()}" th:text="${err}"></p>
-                    </div>
-
+                <form th:action="@{/register}" th:object="${registrationForm}" method="post">
                     <div class="mb-3">
                         <label for="firstName" class="form-label">First Name</label>
                         <input type="text"
@@ -27,7 +22,7 @@
                                class="form-control"
                                id="firstName"
                                th:errorclass="is-invalid">
-                        <div th:if="${fields.hasErrors('firstName')}" class="invalid-feedback" th:errors="*{firstName}"></div>
+                        <div th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback" th:errors="*{firstName}"></div>
                     </div>
 
                     <div class="mb-3">
@@ -37,7 +32,7 @@
                                class="form-control"
                                id="lastName"
                                th:errorclass="is-invalid">
-                        <div th:if="${fields.hasErrors('lastName')}" class="invalid-feedback"
+                        <div th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback"
                              th:errors="*{lastName}"></div>
                     </div>
 
@@ -79,7 +74,7 @@
                 </form>
 
                 <div class="text-center mt-3">
-                    <small>Already have an account? <a th:ref="@{/login}">Login here</a></small>
+                    <small>Already have an account? <a th:href="@{/login}">Login here</a></small>
                 </div>
                 </div>
             </div>
