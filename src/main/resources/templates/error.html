@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" />
     <title>Error</title>
@@ -18,5 +18,12 @@
 <div class="alert alert-danger" role="alert">
     <p id="error-message"></p>
 </div>
+<div sec:authorize="hasRole('ADMIN')">
+    <p>Admin content visible.</p>
+</div>
+<div sec:authorize="!hasRole('ADMIN')">
+    <p>You do not have admin access.</p>
+</div>
+
 </body>
 </html>

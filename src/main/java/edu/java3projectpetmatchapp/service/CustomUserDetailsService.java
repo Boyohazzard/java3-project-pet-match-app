@@ -8,6 +8,7 @@ import edu.java3projectpetmatchapp.enums.Role;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,12 +47,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepo.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        System.out.println("Assigning role: " + user.getRole().name());
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .build();
+
     }
     public ProfileData getProfileData(String email) {
         User user = userRepo.findUserByEmail(email)
