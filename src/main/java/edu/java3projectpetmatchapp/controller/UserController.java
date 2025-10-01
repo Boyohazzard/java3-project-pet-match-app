@@ -1,8 +1,9 @@
 package edu.java3projectpetmatchapp.controller;
 
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
-import edu.java3projectpetmatchapp.service.UserService;
+import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class UserController {
 
-    private UserService userService;
+    @Autowired
+    private CustomUserDetailsService userService;
 
     // routes for everyone
     @GetMapping({"/", "/index", "/home"})
@@ -31,16 +33,11 @@ public class UserController {
         return "index";
     }
 
-    @PostMapping("/logout")
-    public String logout() {
-        return "index";
-    }
-
     // routes for USER
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("registrationForm", new RegistrationForm());
-        return "registration";
+        return "register";
     }
 
     @PostMapping("/register")
@@ -50,14 +47,14 @@ public class UserController {
             Model model) {
 
         if (result.hasErrors()) {
-            return "registration";
+            return "register";
         }
 
         try {
             userService.registerNewUser(form);
         } catch (IllegalArgumentException e) {
             result.rejectValue("confirmPassword", "error.confirmPassword", e.getMessage());
-            return "registration";
+            return "register";
         }
 
         return "redirect:/login";

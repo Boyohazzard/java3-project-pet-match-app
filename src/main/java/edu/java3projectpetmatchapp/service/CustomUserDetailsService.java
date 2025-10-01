@@ -1,19 +1,21 @@
-/*package edu.java3projectpetmatchapp.service;
+package edu.java3projectpetmatchapp.service;
 
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.enums.Role;
 import edu.java3projectpetmatchapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private UserRepository userRepo;
 
@@ -32,6 +34,16 @@ public class UserService {
         user.setRole(Role.USER);
         userRepo.save(user);
     }
-}
 
- */
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepo.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRole().name())
+                .build();
+    }
+}
