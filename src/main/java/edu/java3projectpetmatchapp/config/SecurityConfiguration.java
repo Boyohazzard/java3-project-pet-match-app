@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -33,8 +34,9 @@ public class SecurityConfiguration {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
+                        .successHandler(customSuccessHandler())
                         .failureUrl("/login?error")
-                        .defaultSuccessUrl("/index", true)
+                        //.defaultSuccessUrl("/index", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -61,6 +63,11 @@ public class SecurityConfiguration {
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
         hierarchy.setHierarchy("ROLE_ADMIN > ROLE_STAFF > ROLE_USER > ROLE_GUEST");
         return hierarchy;
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
     }
         /*@Bean
     public UserDetailsService userDetailService() {
