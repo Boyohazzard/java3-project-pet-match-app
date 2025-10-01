@@ -26,16 +26,6 @@ public class UserController {
         return "login";
     }
 
-    @GetMapping("/logout")
-    public String viewLogout() {
-        return "index";
-    }
-
-    @PostMapping("/logout")
-    public String logout() {
-        return "index";
-    }
-
     // routes for USER
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
