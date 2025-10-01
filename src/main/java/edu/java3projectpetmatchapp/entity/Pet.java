@@ -1,4 +1,3 @@
-/*
 package edu.java3projectpetmatchapp.entity;
 
 import edu.java3projectpetmatchapp.enums.*;
@@ -67,4 +66,3 @@ public class Pet {
     @Column(name = "availability", length = 50, nullable = false)
     private Availability availability = Availability.AVAILABLE;
 }
- */

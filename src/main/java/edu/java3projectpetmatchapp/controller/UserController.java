@@ -1,15 +1,21 @@
 package edu.java3projectpetmatchapp.controller;
 
+import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
+import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.security.Principal;
 
 @Controller
 public class UserController {
@@ -61,7 +67,12 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String viewProfile() {
-        return "userprofile";
+    public String showProfile(Model model, Principal principal) {
+        ProfileData profileData = userService.getProfileData(principal.getName());
+        model.addAttribute("user", profileData.getUser());
+        model.addAttribute("applications", profileData.getApplications());
+        return "profile";
     }
+
+
 }

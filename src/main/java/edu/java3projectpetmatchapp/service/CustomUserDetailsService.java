@@ -1,8 +1,11 @@
 package edu.java3projectpetmatchapp.service;
 
+import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
+import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.enums.Role;
+import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +14,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -18,6 +23,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    ApplicationRepository appRepo;
 
     public void registerNewUser(RegistrationForm form) {
         if (!form.getPassword().equals(form.getConfirmPassword())) {
@@ -45,5 +52,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .password(user.getPassword())
                 .roles(user.getRole().name())
                 .build();
+    }
+    public ProfileData getProfileData(String email) {
+        User user = userRepo.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        List<Application> applications = appRepo.findByUser(user);
+        return new ProfileData(user, applications);
     }
 }

@@ -1,4 +1,3 @@
-/*
 package edu.java3projectpetmatchapp.entity;
 
 import edu.java3projectpetmatchapp.enums.*;
@@ -54,5 +53,3 @@ public class Application {
     @Column(name = "application_status", length = 15)
     private ApplicationStatus applicationStatus = ApplicationStatus.RECEIVED;
 }
-
- */
