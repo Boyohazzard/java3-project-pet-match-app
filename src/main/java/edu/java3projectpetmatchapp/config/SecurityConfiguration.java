@@ -3,6 +3,8 @@ package edu.java3projectpetmatchapp.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -26,12 +29,14 @@ public class SecurityConfiguration {
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.requestMatchers("/staff/**").hasRole("STAFF");
                     registry.anyRequest().authenticated();
+
                 })
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
+                        .successHandler(customSuccessHandler())
                         .failureUrl("/login?error")
-                        .defaultSuccessUrl("/index", true)
+                        //.defaultSuccessUrl("/index", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -51,6 +56,18 @@ public class SecurityConfiguration {
     @Bean
     PasswordEncoder passwordEncoder () {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_STAFF > ROLE_USER > ROLE_GUEST");
+        return hierarchy;
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler customSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
     }
         /*@Bean
     public UserDetailsService userDetailService() {

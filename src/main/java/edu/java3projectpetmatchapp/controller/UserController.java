@@ -41,7 +41,7 @@ public class UserController {
     public String viewLogin() {
         return "login";
     }
-
+    //I have this here so there can be a popup or warning before logging out. Maybe it doesn't need to be its own page though
     @GetMapping("/logout")
     public String viewLogout() {
         return "logout";
@@ -153,7 +153,6 @@ public class UserController {
         String email = principal.getName();
         ProfileData profileData = userService.getProfileData(email);
         model.addAttribute("user", profileData.getUser());
-        model.addAttribute("applications", profileData.getApplications());
         return "staff/dashboard";
     }
 
@@ -164,7 +163,6 @@ public class UserController {
         String email = principal.getName();
         ProfileData profileData = userService.getProfileData(email);
         model.addAttribute("user", profileData.getUser());
-        model.addAttribute("applications", profileData.getApplications());
         return "admin/dashboard";
     }
 }
