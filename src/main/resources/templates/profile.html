@@ -20,37 +20,43 @@
                          style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
             </div>
+
+            <div class="d-grid gap-2 mt-3">
+                <a th:href="@{/profile/edit}" class="btn btn-primary btn-sm">Edit Profile</a>
+            </div>
+
         </div>
 
         <div class="col-md-8">
             <div class="row g-2">
                 <div class="col-sm-6">
-                    <label for="firstName" class="form-label visually-hidden">First Name</label>
+                    <label for="firstName" class="form-label">First Name</label>
                     <input type="text" id="firstName" class="form-control form-control-lg" th:value="${user.firstName}" readonly>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="lastName" class="form-label visually-hidden">Last Name</label>
+                    <label for="lastName" class="form-label">Last Name</label>
                     <input type="text" id="lastName" class="form-control form-control-lg" th:value="${user.lastName}" readonly>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="email" class="form-label visually-hidden">Email</label>
+                    <label for="email" class="form-label">Email</label>
                     <input type="email" id="email" class="form-control form-control-lg" th:value="${user.email}" readonly>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="petPreference" class="form-label visually-hidden">Pet Preference</label>
+                    <label for="petPreference" class="form-label">Pet Preference</label>
                     <input type="text" id="petPreference" class="form-control form-control-lg" th:value="${user.petPreference}" readonly>
                 </div>
 
                 <div class="col-12 mt-3">
-                    <label for="bio" class="form-label visually-hidden">Bio</label>
+                    <label for="bio" class="form-label">Bio</label>
                     <textarea id="bio" rows="5" class="form-control" placeholder="Bio" readonly th:text="${user.bio}"></textarea>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="mt-5 pt-3 border-top" th:if="${applications != null and not #lists.isEmpty(applications)}">
 
         <h2 class="mb-3">List of applications:</h2>

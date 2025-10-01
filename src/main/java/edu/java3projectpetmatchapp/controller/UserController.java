@@ -2,10 +2,13 @@ package edu.java3projectpetmatchapp.controller;
 
 import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
+import edu.java3projectpetmatchapp.dto.UserProfileUpdateForm;
+import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,7 +38,6 @@ public class UserController {
     }
 
     @GetMapping("/login")
-
     public String viewLogin() {
         return "login";
     }
@@ -79,6 +81,69 @@ public class UserController {
         model.addAttribute("user", profileData.getUser());
         model.addAttribute("applications", profileData.getApplications());
         return "profile";
+    }
+
+    // Profile editing
+    @GetMapping("/profile/edit")
+    public String showProfileEditForm(Model model, Principal principal) {
+
+        User userEntity = userService.getUserEntityByEmail(principal.getName())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found for profile edit."));
+
+        UserProfileUpdateForm form = new UserProfileUpdateForm();
+        form.setFirstName(userEntity.getFirstName());
+        form.setLastName(userEntity.getLastName());
+        form.setBio(userEntity.getBio());
+        form.setPetPreference(userEntity.getPetPreference());
+
+        model.addAttribute("user", userEntity);
+
+        model.addAttribute("profileUpdateForm", form);
+
+        model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
+
+        return "profile_edit";
+    }
+
+    @PostMapping("/profile/edit")
+    public String handleProfileUpdate(
+            @ModelAttribute("profileUpdateForm") @Valid UserProfileUpdateForm form,
+            BindingResult result,
+            Principal principal,
+            Model model) {
+
+        Runnable reloadModel = () -> {
+            User userEntity = userService.getUserEntityByEmail(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found after error."));
+            model.addAttribute("user", userEntity);
+            model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
+        };
+
+
+        if (result.hasErrors()) {
+
+            User userEntity = userService.getUserEntityByEmail(principal.getName())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found after failed edit."));
+
+            model.addAttribute("user", userEntity);
+            model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
+
+            return "profile_edit";
+        }
+
+        try {
+            userService.updateProfile(form, principal.getName());
+        } catch (Exception e) {
+
+            // Log the exception for debugging
+            System.err.println("Error updating profile: " + e.getMessage());
+            result.reject("globalError", "Could not save profile due to a system error. Please try again.");
+            reloadModel.run();
+
+            return "profile_edit";
+        }
+
+        return "redirect:/profile";
     }
 
     // routes for STAFF \\

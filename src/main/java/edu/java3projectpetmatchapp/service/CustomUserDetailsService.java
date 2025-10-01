@@ -2,13 +2,12 @@ package edu.java3projectpetmatchapp.service;
 
 import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
+import edu.java3projectpetmatchapp.dto.UserProfileUpdateForm;
 import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.enums.Role;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -73,4 +73,45 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<Application> applications = appRepo.findByUser(user);
         return new ProfileData(user, applications);
     }
+
+    public void updateProfile(UserProfileUpdateForm form, String userEmail) throws Exception {
+        User user = userRepo.findUserByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userEmail));
+
+        // Update basic profile fields
+        user.setFirstName(form.getFirstName());
+        user.setLastName(form.getLastName());
+        user.setBio(form.getBio());
+        user.setPetPreference(form.getPetPreference());
+
+        String currentPhotoUrl = user.getUserPhotoUrl();
+
+        // Handle Photo Deletion or Replacement
+        if (form.isDeletePhoto()) {
+
+            // Only delete the existing file from S3 if it's NOT the default photo
+            if (!currentPhotoUrl.equals(s3Service.getDefaultProfilePhotoUrl())) {
+                s3Service.deleteFileFromUrl(currentPhotoUrl);
+            }
+            user.setUserPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
+
+        } else if (form.getNewPhoto() != null && !form.getNewPhoto().isEmpty()) {
+
+            // Delete the old photo (if it exists and is not the default)
+            if (currentPhotoUrl != null && !currentPhotoUrl.equals(s3Service.getDefaultProfilePhotoUrl())) {
+                s3Service.deleteFileFromUrl(currentPhotoUrl);
+            }
+
+            // Upload the new photo and get its URL
+            String newUrl = s3Service.uploadFile(form.getNewPhoto());
+            user.setUserPhotoUrl(newUrl);
+        }
+
+        userRepo.save(user);
+    }
+
+    public Optional<User> getUserEntityByEmail(String email) {
+        return userRepo.findUserByEmail(email);
+    }
+
 }
