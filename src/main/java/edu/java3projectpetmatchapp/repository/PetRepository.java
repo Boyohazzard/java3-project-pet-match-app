@@ -1,4 +1,3 @@
-/*
 package edu.java3projectpetmatchapp.repository;
 
 import edu.java3projectpetmatchapp.entity.Pet;
@@ -9,4 +8,3 @@ import java.util.Optional;
 @Repository
 public interface PetRepository extends JpaRepository<Pet, Long> {
 }
-*/

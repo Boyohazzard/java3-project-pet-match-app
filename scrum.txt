@@ -60,7 +60,7 @@
 
  Jonathan
  What did I do yesterday? registration and login backend, troubleshooting login errors
- What will I do today? pet profile, cleaning up controllers and service
+ What will I do today? pet profile, fixing security so roles login properly
  What impediments are blocking me? need to research how to separate service and controllers for the entities
 
  Elizabeth
