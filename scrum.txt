@@ -1,3 +1,13 @@
+  Jonathan
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
+
+  Elizabeth
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
+
  2025-09-26
 
  Jonathan
@@ -49,11 +59,35 @@
  2025-10-01
 
  Jonathan
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? registration and login backend, troubleshooting login errors
+ What will I do today? pet profile, cleaning up controllers and service
+ What impediments are blocking me? need to research how to separate service and controllers for the entities
 
  Elizabeth
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? html front end for registration, index, user profile
+ What will I do today? update user profile to be able to edit, look into s3 for photos
+ What impediments are blocking me? github desktop
+
+ 2025-10-02
+
+  Jonathan
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
+
+  Elizabeth
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
+
+  2025-10-03
+
+   Jonathan
+   What did I do yesterday?
+   What will I do today?
+   What impediments are blocking me?
+
+   Elizabeth
+   What did I do yesterday?
+   What will I do today?
+   What impediments are blocking me?

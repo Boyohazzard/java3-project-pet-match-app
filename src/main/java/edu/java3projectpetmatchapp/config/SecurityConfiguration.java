@@ -23,7 +23,6 @@ public class SecurityConfiguration {
                     registry.requestMatchers(HttpMethod.POST, "/register").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.requestMatchers("/staff/**").hasRole("STAFF");
-
                     registry.anyRequest().authenticated();
                 })
                 .formLogin(form -> form
