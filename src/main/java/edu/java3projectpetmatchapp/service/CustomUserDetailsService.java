@@ -20,12 +20,21 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepository userRepo;
-    @Autowired
-    ApplicationRepository appRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepo;
+    private final ApplicationRepository appRepo;
+    private final S3StorageService s3Service;
+
+    public CustomUserDetailsService(
+            PasswordEncoder passwordEncoder,
+            UserRepository userRepo,
+            ApplicationRepository appRepo,
+            S3StorageService s3Service) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepo = userRepo;
+        this.appRepo = appRepo;
+        this.s3Service = s3Service;
+    }
 
     public void registerNewUser(RegistrationForm form) {
         if (!form.getPassword().equals(form.getConfirmPassword())) {
@@ -40,6 +49,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         user.setEmail(form.getEmail());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
         user.setRole(Role.USER);
+        user.setUserPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
         userRepo.save(user);
     }
 
