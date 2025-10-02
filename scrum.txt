@@ -70,6 +70,19 @@
 
  2025-10-02
 
+ Jonathan
+ What did I do yesterday? pet profile, fixing security so roles login properly.
+ What will I do today? Need to adjust routing for html.
+ What impediments are blocking me? Other tasks related to job search.
+
+ Elizabeth
+ What did I do yesterday? Updated profile to be editable. Connected S3 with default profile photos.
+ What will I do today? Work on Admin dashboard with view of list of users and ability to edit user
+ role.
+ What impediments are blocking me? Other tasks related to job search.
+
+ 2025-10-03
+
   Jonathan
   What did I do yesterday?
   What will I do today?
@@ -79,15 +92,3 @@
   What did I do yesterday?
   What will I do today?
   What impediments are blocking me?
-
-  2025-10-03
-
-   Jonathan
-   What did I do yesterday?
-   What will I do today?
-   What impediments are blocking me?
-
-   Elizabeth
-   What did I do yesterday?
-   What will I do today?
-   What impediments are blocking me?
