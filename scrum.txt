@@ -81,14 +81,39 @@
  role.
  What impediments are blocking me? Other tasks related to job search.
 
- 2025-10-03
+ 2025-10-05
 
-  Jonathan
-  What did I do yesterday?
-  What will I do today?
-  What impediments are blocking me?
+ Jonathan
+ What did I do yesterday? No work done on project because working on another class.
+ What will I do today? Need to adjust routing for html.
+ What impediments are blocking me? Focused on working on CV to be able to apply for internships.
 
-  Elizabeth
-  What did I do yesterday?
-  What will I do today?
-  What impediments are blocking me?
+ Elizabeth
+ What did I do yesterday? No work done on project because working on another class.
+ What will I do today? Work on Admin dashboard with view of list of users and ability to edit user
+ role.
+ What impediments are blocking me? Focused on working on CV to be able to apply for internships.
+
+ 2025-10-06
+
+ Jonathan
+ What did I do yesterday?
+ What will I do today?
+ What impediments are blocking me?
+
+ Elizabeth
+ What did I do yesterday?
+ What will I do today?
+ What impediments are blocking me?
+
+ 2025-10-07
+
+ Jonathan
+ What did I do yesterday?
+ What will I do today?
+ What impediments are blocking me?
+
+ Elizabeth
+ What did I do yesterday?
+ What will I do today?
+ What impediments are blocking me?
