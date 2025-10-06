@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final CustonUserDetailsService userService;
+    private final CustomUserDetailsService userService;
 
     public AdminController(CustomUserDetailsService userService) {
         this.userService = userService;
