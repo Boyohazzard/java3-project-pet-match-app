@@ -1,6 +1,8 @@
 package edu.java3projectpetmatchapp.service;
 
+import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
+import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ public class PetService {
 
     @Autowired
     private PetRepository petRepo;
+    @Autowired
+    private ApplicationRepository appRepo;
 
     public Pet getPetById(long id) {
         System.out.println("Searching for pet in DB...");
@@ -22,5 +26,9 @@ public class PetService {
     }
 
     public List<Pet> getAllPets() { return petRepo.findAll(); }
+
+    public List<Application> getAllPetApplications(Pet pet) {
+        return appRepo.findByPet(pet);
+    }
 
 }

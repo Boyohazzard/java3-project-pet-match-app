@@ -8,7 +8,7 @@
 
 <main class="container mt-4 mb-5">
 
-    <h1 class="mb-4 text-center">Some scruffy little fuzzy guy</h1>
+    <h1 class="mb-4 text-center mt-5 pt-2 border-top">Some scruffy little fuzzy guy</h1>
 
     <div class="row">
         <div class="col-md-4 mb-4">
@@ -22,28 +22,63 @@
         <div class="col-md-8">
             <div class="row g-2">
                 <div class="col-sm-6">
-                    <label for="firstName" class="form-label visually-hidden">pet's Name</label>
-                    <input type="text" id="firstName" class="form-control form-control-lg" th:value="${pet.petName}" readonly>
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" id="name" class="form-control form-control-lg" th:value="${pet.petName}" readonly>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="lastName" class="form-label visually-hidden">type of gut</label>
-                    <input type="text" id="lastName" class="form-control form-control-lg" th:value="${pet.petType}" readonly>
+                    <label for="species" class="form-label">Species</label>
+                    <input type="text" id="species" class="form-control form-control-lg" th:value="${pet.petType}" readonly>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="email" class="form-label visually-hidden">Breed</label>
-                    <input type="email" id="email" class="form-control form-control-lg" th:value="${pet.petBreed}" readonly>
+                    <label for="breed" class="form-label">Breed</label>
+                    <input type="email" id="breed" class="form-control form-control-lg" th:value="${pet.petBreed}" readonly>
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="petPreference" class="form-label visually-hidden">sociability</label>
-                    <input type="text" id="petPreference" class="form-control form-control-lg" th:value="${pet.sociability}" readonly>
+                    <label for="age" class="form-label">Age</label>
+                    <input type="text" id="age" class="form-control form-control-lg" th:value="${pet.age}" readonly>
+                </div>
+
+                <div class="col-sm-6">
+                      <label for="date_pet_sheltered" class="form-label">Date Sheltered</label>
+                      <input type="date" id="date_pet_sheltered" class="form-control form-control-lg"
+                             th:value="${#dates.format(pet.datePetSheltered, 'yyyy-MM-dd')}" readonly>
+                </div>
+
+                <div class="col-sm-6">
+                    <label for="availability" class="form-label">Availability</label>
+                    <div class="form-control form-control-lg d-flex align-items-center">
+                        <span class="badge" id="availability"
+                          th:classappend="${pet.availability == 'ADOPTED'} ? 'bg-danger' :
+                                          (${pet.availability == 'RESERVED'} ? 'bg-warning text-dark' : 'bg-success')"
+                          th:text="${pet.availability}">AVAILABLE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+                <div class="col-sm-8">
+                    <label for="sociability" class="form-label">Sociability</label>
+                    <input type="text" id="sociability" class="form-control form-control-lg"
+                           th:value="${pet.sociability}" readonly>
+                </div>
+                <div class="col-sm-8">
+                    <label for="specialNeeds" class="form-label">Special Needs</label>
+                    <input type="text" id="specialNeeds" class="form-control form-control-lg"
+                           th:value="${pet.specialNeeds}" readonly>
+                </div>
+                <div class="col-sm-8">
+                    <label for="healthIssues" class="form-label">Health Issues</label>
+                    <input type="text" id="healthIssues" class="form-control form-control-lg"
+                           th:value="${pet.healthIssues}" readonly>
                 </div>
 
                 <div class="col-12 mt-3">
-                    <label for="bio" class="form-label visually-hidden">Bio</label>
-                    <textarea id="bio" rows="5" class="form-control" placeholder="Bio" readonly th:text="${pet.about}"></textarea>
+                    <label for="about" class="form-label">Bio</label>
+                    <textarea id="about" rows="5" class="form-control" placeholder="Bio" readonly th:text="${pet.about}"></textarea>
                 </div>
             </div>
         </div>
