@@ -13,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 public class UserController {
@@ -74,11 +76,26 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/profile")
-    public String showProfile(Model model, Principal principal) {
-        ProfileData profileData = userService.getProfileData(principal.getName());
+    @GetMapping({"/profile", "/profile/{id}"})
+    public String showProfile(@PathVariable Optional<Long> id, Model model, Principal principal) {
+
+        String targetEmail;
+
+        if (id.isPresent()) {
+            // Case 1: Admin is viewing another user's profile by ID.
+
+            User targetUser = userService.getUserEntityById(id.get())
+                    .orElseThrow(() -> new UsernameNotFoundException("Target user not found."));
+            targetEmail = targetUser.getEmail();
+        } else {
+            // Case 2: Standard user or admin is viewing their own profile (self-view).
+            targetEmail = principal.getName();
+        }
+
+        ProfileData profileData = userService.getProfileData(targetEmail);
         model.addAttribute("user", profileData.getUser());
         model.addAttribute("applications", profileData.getApplications());
+
         return "profile";
     }
 
