@@ -97,14 +97,14 @@
  2025-10-06
 
  Jonathan
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? sent resumes and pondered my life
+ What will I do today? set up pet profile, pet edit, and pet create accessible to staff
+ What impediments are blocking me? learning thymeleaf
 
  Elizabeth
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? started Admin dashboard with ability to perform CRUD on users
+ What will I do today? Finishing/polishing the admin dash
+ What impediments are blocking me? unknown database errors/heroku credentials
 
  2025-10-07
 
@@ -117,3 +117,15 @@
  What did I do yesterday?
  What will I do today?
  What impediments are blocking me?
+
+  2025-10-08
+
+  Jonathan
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
+
+  Elizabeth
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
