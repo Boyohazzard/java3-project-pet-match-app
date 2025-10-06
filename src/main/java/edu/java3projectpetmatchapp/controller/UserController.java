@@ -148,21 +148,21 @@ public class UserController {
 
     // routes for STAFF \\
 
-    @GetMapping("/staff/dashboard")
-    public String staffDashboard(Model model, Principal principal) {
-        String email = principal.getName();
-        ProfileData profileData = userService.getProfileData(email);
-        model.addAttribute("user", profileData.getUser());
-        return "staff/dashboard";
-    }
+//    @GetMapping("/staff/dashboard")
+//    public String staffDashboard(Model model, Principal principal) {
+//        String email = principal.getName();
+//        ProfileData profileData = userService.getProfileData(email);
+//        model.addAttribute("user", profileData.getUser());
+//        return "staff/dashboard";
+//    }
 
     // routes for ADMIN \\
 
-    @GetMapping("/admin/dashboard")
-    public String adminDashboard(Model model, Principal principal) {
-        String email = principal.getName();
-        ProfileData profileData = userService.getProfileData(email);
-        model.addAttribute("user", profileData.getUser());
-        return "admin/dashboard";
-    }
+//    @GetMapping("/admin/dashboard")
+//    public String adminDashboard(Model model, Principal principal) {
+//        String email = principal.getName();
+//        ProfileData profileData = userService.getProfileData(email);
+//        model.addAttribute("user", profileData.getUser());
+//        return "admin/dashboard";
+//    }
 }
