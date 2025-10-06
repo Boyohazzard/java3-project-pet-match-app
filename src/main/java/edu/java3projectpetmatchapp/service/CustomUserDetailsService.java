@@ -8,6 +8,7 @@ import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.enums.Role;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -116,6 +117,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     // List of all users for admin dashboard
     public List<User> getAllUsers(){
         return userRepo.findAll();
+    }
+
+    public Optional<User> getUserEntityById(Long id){
+        return userRepo.findById(id);
+    }
+
+    @Transactional
+    public void updateUserRole(Long userId, Role newRole) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
+
+        user.setRole(newRole);
+        userRepo.save(user);
     }
 
 }

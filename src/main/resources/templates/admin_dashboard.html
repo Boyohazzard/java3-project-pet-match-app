@@ -44,7 +44,7 @@
                     <td>
                         <div class="btn-group btn-group-sm" role="group">
                             <!-- Link to view user's profile -->
-                            <a th:href="@{/profile(email=${user.email})}" class="btn btn-outline-info">View Profile</a>
+                            <a th:href="@{/profile/{id}(id=${user.id})}" class="btn btn-outline-info">View Profile</a>
 
                             <!-- Link to edit user's role/data -->
                             <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" class="btn btn-outline-secondary">Edit Role</a>
