@@ -113,4 +113,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userRepo.findUserByEmail(email);
     }
 
+    // List of all users for admin dashboard
+    public List<User> getAllUsers(){
+        return userRepo.findAll();
+    }
+
 }
