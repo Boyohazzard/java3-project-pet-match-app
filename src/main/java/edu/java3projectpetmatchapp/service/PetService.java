@@ -5,6 +5,7 @@ import edu.java3projectpetmatchapp.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -19,4 +20,7 @@ public class PetService {
         return petRepo.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No pet found with ID: " + id));
     }
+
+    public List<Pet> getAllPets() { return petRepo.findAll(); }
+
 }

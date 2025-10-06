@@ -22,5 +22,4 @@ public class PetController {
 
         return "pet/detail";
     }
-
 }

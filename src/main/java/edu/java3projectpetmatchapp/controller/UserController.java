@@ -7,7 +7,6 @@ import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +40,7 @@ public class UserController {
     public String viewLogin() {
         return "login";
     }
+
     //I have this here so there can be a popup or warning before logging out. Maybe it doesn't need to be its own page though
     @GetMapping("/logout")
     public String viewLogout() {
@@ -58,8 +58,7 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(
             @ModelAttribute("registrationForm") @Valid RegistrationForm form,
-            BindingResult result,
-            Model model) {
+            BindingResult result) {
 
         if (result.hasErrors()) {
             return "register";

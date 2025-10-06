@@ -1,79 +1,84 @@
 <!DOCTYPE html>
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/header.html :: header-head}">
+    <title>Admin Dashboard - User Management</title>
 </head>
 <body>
 
 <div th:replace="~{fragments/header.html :: header-nav}"></div>
 
-<main class="container mt-4 mb-5">
+<main class="container mt-5 mb-5">
 
-    <h1 class="mb-4 text-center">STAFF Profile. now get back to work!</h1>
+    <h1 class="display-5 mb-4 text-center">Staff Dashboard</h1>
+    <p class="text-center text-muted">Manage all pets profiles, and user applications</p>
+    <hr>
 
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="p-5 border bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                <span class="text-muted">Profile Picture Placeholder</span>
-            </div>
-        </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
 
-        <div class="col-md-8">
-            <div class="row g-2">
-                <div class="col-sm-6">
-                    <label for="firstName" class="form-label visually-hidden">First Name</label>
-                    <input type="text" id="firstName" class="form-control form-control-lg" th:value="${user.firstName}" readonly>
-                </div>
+            <h2 class="h4 mb-3">All Pets</h2>
 
-                <div class="col-sm-6">
-                    <label for="lastName" class="form-label visually-hidden">Last Name</label>
-                    <input type="text" id="lastName" class="form-control form-control-lg" th:value="${user.lastName}" readonly>
-                </div>
+            <table class="table table-hover table-striped shadow-sm rounded">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loop through all users fetched from the controller -->
+                <tr th:each="pet : ${pets}">
+                    <td th:text="${pet.id}"></td>
+                    <td th:text="${pet.petName}"></td>
+                    <td th:text="${#dates.format(pet.datePetSheltered, 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${pet.availability == 'ADOPTED'} ? 'bg-danger' :
+                                              (${pet.availability == 'RESERVED'} ? 'bg-warning text-dark' : 'bg-success')"
+                              th:text="${pet.availability}">AVAILABLE</span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a th:href="@{/pet/{id}(id=${pet.id})}" class="btn btn-outline-info">View Pet</a>
+                            <a th:href="@{/pet/{id}(id=${pet.id})/edit}" class="btn btn-outline-secondary">Edit Pet</a>
+                            <!-- <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" class="btn btn-outline-secondary">View Applications</a> -->
 
-                <div class="col-sm-6">
-                    <label for="email" class="form-label visually-hidden">Email</label>
-                    <input type="email" id="email" class="form-control form-control-lg" th:value="${user.email}" readonly>
-                </div>
-
-                <div class="col-sm-6">
-                    <label for="petPreference" class="form-label visually-hidden">Pet Preference</label>
-                    <input type="text" id="petPreference" class="form-control form-control-lg" th:value="${user.petPreference}" readonly>
-                </div>
-
-                <div class="col-12 mt-3">
-                    <label for="bio" class="form-label visually-hidden">Bio</label>
-                    <textarea id="bio" rows="5" class="form-control" placeholder="Bio" readonly th:text="${user.bio}"></textarea>
-                </div>
-            </div>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${pet.id}">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    <div class="mt-5 pt-3 border-top" th:if="${applications != null and not #lists.isEmpty(applications)}">
 
-        <h2 class="mb-3">List of applications:</h2>
-
-        <div th:each="app : ${applications}" class="row g-2 align-items-center mb-2 p-2 border rounded-3 bg-white shadow-sm">
-
-            <div class="col-sm-9 col-md-8">
-                <span class="fw-bold" th:text="${app.petName}">pet_name</span>
-                <span class="text-muted small ms-2" th:text="${app.petType}">pet_type</span>
-
-                <a th:href="@{/pet/{id}(id=${app.petId})}" class="stretched-link visually-hidden">View Pet</a>
+    <!-- Modals for Delete Confirmation (One per user) -->
+    <div th:each="pet : ${pets}">
+        <div class="modal fade" th:id="'deleteModal' + ${pet.id}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to permanently delete pet:
+                            <strong th:text="${pet.petName} + ' (' + ${pet.petType} + ')'"></strong>?</p>
+                        <p class="text-danger small">This action cannot be undone and will delete all associated applications.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form th:action="@{/staff/users/{id}/delete(id=${pet.id})}" method="post">
+                            <button type="submit" class="btn btn-danger">Delete Pet</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-sm-3 col-md-4 text-end">
-                <span class="badge text-uppercase"
-                      th:classappend="${app.applicationStatus == 'approved'} ? 'bg-success' :
-                                      ${app.applicationStatus == 'rejected'} ? 'bg-danger' :
-                                      'bg-secondary'"
-                      th:text="${app.applicationStatus}">application_status</span>
-            </div>
-
         </div>
-
-    </div>
-
-    <div class="mt-5 pt-3 border-top" th:if="${applications == null or #lists.isEmpty(applications)}">
-        <h2 class="text-muted text-center">No applications found.</h2>
-        <p class="text-center">Ready to find a furry friend? <a th:href="@{/}">Browse adoptable pets here.</a></p>
     </div>
 
 </main>
