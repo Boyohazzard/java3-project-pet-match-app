@@ -44,7 +44,7 @@ public class AdminController {
         form.setLastName(userEntity.getLastName());
         form.setRole(userEntity.getRole());
 
-        model.addAttribute("usr", userEntity);
+        model.addAttribute("user", userEntity);
         model.addAttribute("userRoleUpdateDto", form);
         return "admin_user_edit";
     }
@@ -54,9 +54,13 @@ public class AdminController {
             @PathVariable Long id,
             @ModelAttribute("userRoleUpdateDto") @Valid UserRoleUpdateDto form,
             BindingResult result,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
         if (result.hasErrors()) {
+            User userEntity = userService.getUserEntityById(id)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
+            model.addAttribute("user", userEntity);
             return "admin_user_edit";
         }
 
