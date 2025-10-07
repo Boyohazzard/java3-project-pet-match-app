@@ -7,6 +7,7 @@ import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,6 +101,7 @@ public class UserController {
     }
 
     // Profile editing
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/profile/edit")
     public String showProfileEditForm(Model model, Principal principal) {
 
@@ -120,7 +122,7 @@ public class UserController {
 
         return "profile_edit";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/profile/edit")
     public String handleProfileUpdate(
             @ModelAttribute("profileUpdateForm") @Valid UserProfileUpdateForm form,

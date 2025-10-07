@@ -1,11 +1,14 @@
 package edu.java3projectpetmatchapp.service;
 
 import edu.java3projectpetmatchapp.dto.AddPetForm;
+import edu.java3projectpetmatchapp.dto.UpdatePetForm;
 import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
+import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,7 +26,7 @@ public class PetService {
     public Pet getPetById(long id) {
         System.out.println("Searching for pet in DB...");
 
-        return petRepo.findById(id)
+        return petRepo.findPetById(id)
                 .orElseThrow(() -> new NoSuchElementException("No pet found with ID: " + id));
     }
 
@@ -32,7 +35,6 @@ public class PetService {
     public List<Application> getAllPetApplications(Pet pet) {
         return appRepo.findByPet(pet);
     }
-
 
     public void registerNewPet(AddPetForm form) {
         Pet pet = new Pet();
@@ -49,9 +51,38 @@ public class PetService {
         } else {
             pet.setDatePetSheltered(form.getDatePetSheltered());
         }
-
         //pet.setPetPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
-        System.out.println("Saving pet: " + pet);
+
+        petRepo.save(pet);
+    }
+
+    public UpdatePetForm convertPetToForm(Pet pet) {
+        UpdatePetForm form = new UpdatePetForm();
+        form.setId(pet.getId());
+        form.setPetName(pet.getPetName());
+        form.setPetType(pet.getPetType());
+        form.setPetBreed(pet.getPetBreed());
+        form.setSociability(pet.getSociability());
+        form.setSpecialNeeds(pet.getSpecialNeeds());
+        form.setHealthIssues(pet.getHealthIssues());
+        form.setAbout(pet.getAbout());
+        form.setAge(pet.getAge());
+        form.setDatePetSheltered(pet.getDatePetSheltered());
+        return form;
+    }
+
+
+    public void updatePet(UpdatePetForm form, Pet pet) throws Exception {
+        pet.setPetName(form.getPetName());
+        pet.setPetType(form.getPetType());
+        pet.setPetBreed(form.getPetBreed());
+        pet.setSociability(form.getSociability());
+        pet.setSpecialNeeds(form.getSpecialNeeds());
+        pet.setHealthIssues(form.getHealthIssues());
+        pet.setAbout(form.getAbout());
+        pet.setAge(form.getAge());
+        pet.setDatePetSheltered(form.getDatePetSheltered());
+        //pet.setPetPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
 
         petRepo.save(pet);
     }

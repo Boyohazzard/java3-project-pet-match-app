@@ -44,7 +44,7 @@
                 <div class="col-sm-6">
                       <label for="date_pet_sheltered" class="form-label">Date Sheltered</label>
                       <input type="date" id="date_pet_sheltered" class="form-control form-control-lg"
-                             th:value="${#dates.format(pet.datePetSheltered, 'yyyy-MM-dd')}" readonly>
+                             th:value="${pet.datePetSheltered}" readonly>
                 </div>
 
                 <div class="col-sm-6">
