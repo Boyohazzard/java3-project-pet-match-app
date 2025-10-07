@@ -66,6 +66,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
 
     }
+
+    public Optional<User> getUserEntityByEmail(String email) {
+        return userRepo.findUserByEmail(email);
+    }
+
     public ProfileData getProfileData(String email) {
         User user = userRepo.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -108,10 +113,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         userRepo.save(user);
-    }
-
-    public Optional<User> getUserEntityByEmail(String email) {
-        return userRepo.findUserByEmail(email);
     }
 
     // List of all users for admin dashboard
