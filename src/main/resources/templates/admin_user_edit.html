@@ -21,13 +21,13 @@
                         (<span th:text="${user.email}"></span>)
                     </div>
 
-                    <!-- Global Error/Success Messaging -->
-                    <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
-                        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
-                    </div>
-
                     <form th:action="@{/admin/users/{id}/edit(id=${user.id})}" method="post"
                           th:object="${userRoleUpdateDto}">
+
+                        <!-- Global Error/Success Messaging -->
+                        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
+                            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+                        </div>
 
                         <!-- Hidden Field for User ID -->
                         <input type="hidden" th:field="*{id}" />
