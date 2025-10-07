@@ -25,9 +25,7 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String showAdminDashboard(Model model) {
-
         List<User> users = userService.getAllUsers();
-
         model.addAttribute("users", users);
         return "admin_dashboard";
     }
@@ -85,7 +83,8 @@ public class AdminController {
         } catch (UsernameNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user and associated data.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user and " +
+                    "associated data:" + e.getMessage());
         }
         return "redirect:/admin/dashboard";
     }
