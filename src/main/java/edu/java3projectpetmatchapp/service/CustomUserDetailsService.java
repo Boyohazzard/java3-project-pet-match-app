@@ -132,4 +132,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         userRepo.save(user);
     }
 
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
+
+        // Delete all associated Applications
+        appRepo.deleteByUser(user);
+
+        // Then delete the User itself
+        userRepo.delete(user);
+    }
+
 }

@@ -44,12 +44,13 @@ public class AdminController {
         form.setLastName(userEntity.getLastName());
         form.setRole(userEntity.getRole());
 
+        // This is what the template expects for read-only info
         model.addAttribute("user", userEntity);
         model.addAttribute("userRoleUpdateDto", form);
         return "admin_user_edit";
     }
 
-    @PostMapping("users/{id}/edit")
+    @PostMapping("/users/{id}/edit")
     public String handleRoleUpdate(
             @PathVariable Long id,
             @ModelAttribute("userRoleUpdateDto") @Valid UserRoleUpdateDto form,
@@ -58,6 +59,7 @@ public class AdminController {
             Model model) {
 
         if (result.hasErrors()) {
+            // Reload user data for the view to render read-only fields on error
             User userEntity = userService.getUserEntityById(id)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
             model.addAttribute("user", userEntity);
@@ -75,4 +77,16 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
+    @PostMapping("/users/{id}/delete")
+    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUser(id);
+            redirectAttributes.addFlashAttribute("successMessage", "User deleted successfully.");
+        } catch (UsernameNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user and associated data.");
+        }
+        return "redirect:/admin/dashboard";
+    }
 }
