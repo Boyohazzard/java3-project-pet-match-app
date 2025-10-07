@@ -42,7 +42,6 @@ public class AdminController {
         form.setLastName(userEntity.getLastName());
         form.setRole(userEntity.getRole());
 
-        // This is what the template expects for read-only info
         model.addAttribute("user", userEntity);
         model.addAttribute("userRoleUpdateDto", form);
         return "admin_user_edit";
@@ -56,9 +55,10 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
-
+            // If validation fails, we redirect back to the GET handler,
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRoleUpdateDto", result);
             redirectAttributes.addFlashAttribute("userRoleUpdateDto", form);
+
             return "redirect:/admin/users/{id}/edit";
         }
 
@@ -69,10 +69,10 @@ public class AdminController {
         } catch (UsernameNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
         } catch (Exception e) {
+            // Catches transaction errors or other system issues
             redirectAttributes.addFlashAttribute("errorMessage", "Error updating role: " + e.getMessage());
         }
         return "redirect:/admin/dashboard";
-
     }
 
     @PostMapping("/users/{id}/delete")
@@ -83,8 +83,7 @@ public class AdminController {
         } catch (UsernameNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user and " +
-                    "associated data:" + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user and associated data: " + e.getMessage());
         }
         return "redirect:/admin/dashboard";
     }
