@@ -140,7 +140,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Delete all associated Applications
         appRepo.deleteByUser(user);
 
-        // Then delete the User itself
+        // Then delete the User
         userRepo.delete(user);
     }
 

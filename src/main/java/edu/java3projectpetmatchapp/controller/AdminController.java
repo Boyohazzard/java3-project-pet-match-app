@@ -56,11 +56,16 @@ public class AdminController {
             RedirectAttributes redirectAttributes,
             Model model) {
 
-        if (result.hasErrors()) {
-            // Reload user data for the view to render read-only fields on error
+        // Helper function to reload data on error. Trying to fix the crash during edit and
+        // delete actions.
+        Runnable reloadUserForError = () -> {
             User userEntity = userService.getUserEntityById(id)
                     .orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
             model.addAttribute("user", userEntity);
+        };
+
+        if (result.hasErrors()) {
+            reloadUserForError.run();
             return "admin_user_edit";
         }
 
@@ -71,6 +76,11 @@ public class AdminController {
         } catch (UsernameNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "User not found.");
+        } catch (Exception e) {
+            System.err.println("Error updating profile role: " + e.getMessage());
+            result.reject("globalError", "A system error occurred during role update");
+            reloadUserForError.run();
+            return "admin_user_edit";
         }
         return "redirect:/admin/dashboard";
     }
