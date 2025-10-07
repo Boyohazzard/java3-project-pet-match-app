@@ -8,8 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.EnumSet;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -60,7 +59,7 @@ public class Pet {
     private int age;
 
     @Column(name = "date_pet_sheltered", nullable = false)
-    private Date datePetSheltered;
+    private LocalDate datePetSheltered;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", length = 50, nullable = false)

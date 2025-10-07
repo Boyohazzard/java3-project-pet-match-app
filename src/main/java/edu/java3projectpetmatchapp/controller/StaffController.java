@@ -36,21 +36,33 @@ public class StaffController {
         return "staff/dashboard";
     }
 
-    @GetMapping("/addPet")
+    @GetMapping("/addpet")
     public String showAddPetForm(Model model) {
         model.addAttribute("addPetForm", new AddPetForm());
         model.addAttribute("petTypes", PetType.values());
         model.addAttribute("sociabilityOptions", Sociability.values());
-        return "staff/addPet";
+        return "staff/addpet";
     }
 
-    @PostMapping("/addPet")
+    @PostMapping("/addpet")
     public String addPet(
             @ModelAttribute("addPetForm") @Valid AddPetForm form,
-            BindingResult result) {
+            BindingResult result,
+            Model model) {
         if (result.hasErrors()) {
-            return "staff/addPet";
+            model.addAttribute("petTypes", PetType.values());
+            model.addAttribute("sociabilityOptions", Sociability.values());
+            return "staff/addpet";
         }
-        return "redirect:/login";
+        try {
+            petService.registerNewPet(form);
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("petTypes", PetType.values());
+            model.addAttribute("sociabilityOptions", Sociability.values());
+            model.addAttribute("error", "An error occurred while saving the pet.");
+            return "staff/addpet";
+        }
+        return "redirect:dashboard";
     }
 }

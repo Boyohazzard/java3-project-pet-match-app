@@ -4,8 +4,9 @@ import edu.java3projectpetmatchapp.enums.PetType;
 import edu.java3projectpetmatchapp.enums.Sociability;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class AddPetForm {
@@ -35,5 +36,7 @@ public class AddPetForm {
     @Max(100)
     private int age;
 
-    private Date datePetSheltered;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "Please enter the date the pet was sheltered")
+    private LocalDate datePetSheltered;
 }

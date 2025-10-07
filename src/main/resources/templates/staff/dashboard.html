@@ -33,7 +33,7 @@
                 <tr th:each="pet : ${pets}">
                     <td th:text="${pet.id}"></td>
                     <td th:text="${pet.petName}"></td>
-                    <td th:text="${#dates.format(pet.datePetSheltered, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${pet.datePetSheltered}"></td>
                     <td>
                         <span class="badge"
                               th:classappend="${pet.availability == 'ADOPTED'} ? 'bg-danger' :

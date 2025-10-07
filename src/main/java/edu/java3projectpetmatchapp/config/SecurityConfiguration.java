@@ -69,19 +69,4 @@ public class SecurityConfiguration {
     public AuthenticationSuccessHandler customSuccessHandler() {
         return new CustomAuthenticationSuccessHandler();
     }
-        /*@Bean
-    public UserDetailsService userDetailService() {
-        UserDetails normalLoser = User.builder()
-                .username("jg")
-                .password("$2a$12$fawUS1QwPlasB/EX3cHFg.uScJtmWP8qGTOWGLxpKGRsW7leu/K4e")
-                .roles("USER", "STAFF")
-                .build();
-        UserDetails adminUser = User.builder()
-                .username("admin")
-                .password("$2a$12$3w1e5ZpXEQ5hptmR5LJEuulA9yvbHG7i1JMRd/8BSC.a5UsPqeVku")
-                .roles("ADMIN", "STAFF", "USER")
-                .build();
-        return new InMemoryUserDetailsManager(normalLoser, adminUser);
-    }
-*/
 }

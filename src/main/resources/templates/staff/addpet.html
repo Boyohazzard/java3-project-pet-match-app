@@ -10,7 +10,7 @@
 
     <h1 class="display-6 text-center mb-4">New Pet!</h1>
 
-    <form th:action="@{/staff/pet/add}" method="post" th:object="${addPetForm}" enctype="multipart/form-data">
+    <form th:action="@{/staff/addpet}" method="post" th:object="${addPetForm}" enctype="multipart/form-data">
 
         <div class="row">
             <div class="col-md-4 mb-4 text-center">
@@ -19,7 +19,7 @@
                         <span class="text-muted">Profile Picture Placeholder</span>
                     </div>
                 </div>
-
+            </div>
 
             <div class="col-md-8">
                 <div class="row g-2">
@@ -53,9 +53,10 @@
                     <div class="col-sm-6">
                         <label for="date_pet_sheltered" class="form-label">Date Sheltered? yyyy-MM-dd</label>
                         <input type="date" id="date_pet_sheltered" class="form-control form-control-lg"
-                               th:field="*{datePetSheltered}" >
+                               th:field="*{datePetSheltered}" th:errorclass="is-invalid">
+                        <div th:if="${#fields.hasErrors('datePetSheltered')}" class="invalid-feedback"
+                             th:errors="*{datePetSheltered}"></div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -85,7 +86,7 @@
                 <textarea id="about" rows="5" class="form-control" placeholder="about?" th:field="*{about}"></textarea>
             </div>
         </div>
-        </div>
+        <button type="submit" class="btn btn-success">Add critter</button>
     </form>
 </main>
 
