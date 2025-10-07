@@ -109,16 +109,28 @@
  2025-10-07
 
  Jonathan
- What did I do yesterday?
- What will I do today?
+ What did I do yesterday? made a create pet page accessible to staff
+ What will I do today? allow staff to update pets, make the application entity with routing
  What impediments are blocking me?
 
  Elizabeth
- What did I do yesterday?
- What will I do today?
- What impediments are blocking me?
+ What did I do yesterday? Admin can change roles, delete users, and so much more
+ What will I do today? set up the index and finish off the Admin user views
+ What impediments are blocking me? out of bounds html
 
   2025-10-08
+
+  Jonathan
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
+
+  Elizabeth
+  What did I do yesterday?
+  What will I do today?
+  What impediments are blocking me?
+
+  2025-10-09
 
   Jonathan
   What did I do yesterday?

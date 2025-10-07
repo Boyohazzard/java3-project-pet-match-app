@@ -4,11 +4,9 @@ import edu.java3projectpetmatchapp.dto.AddPetForm;
 import edu.java3projectpetmatchapp.dto.UpdatePetForm;
 import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
-import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
