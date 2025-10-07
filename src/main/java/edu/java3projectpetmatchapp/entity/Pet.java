@@ -66,4 +66,3 @@ public class Pet {
     @Column(name = "availability", length = 50, nullable = false)
     private Availability availability = Availability.AVAILABLE;
 }
-//private LocalDateTime datePetSheltered;
