@@ -53,20 +53,13 @@ public class AdminController {
             @PathVariable Long id,
             @ModelAttribute("userRoleUpdateDto") @Valid UserRoleUpdateDto form,
             BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
-
-        // Helper function to reload data on error. Trying to fix the crash during edit and
-        // delete actions.
-        Runnable reloadUserForError = () -> {
-            User userEntity = userService.getUserEntityById(id)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + id));
-            model.addAttribute("user", userEntity);
-        };
+            RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
-            reloadUserForError.run();
-            return "admin_user_edit";
+
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRoleUpdateDto", result);
+            redirectAttributes.addFlashAttribute("userRoleUpdateDto", form);
+            return "redirect:/admin/users/{id}/edit";
         }
 
         try {
@@ -74,15 +67,12 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("successMessage",
                     "Role for " + form.getFirstName() + " updated successfully!");
         } catch (UsernameNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "User not found.");
+            redirectAttributes.addFlashAttribute("errorMessage", "User not found.");
         } catch (Exception e) {
-            System.err.println("Error updating profile role: " + e.getMessage());
-            result.reject("globalError", "A system error occurred during role update");
-            reloadUserForError.run();
-            return "admin_user_edit";
+            redirectAttributes.addFlashAttribute("errorMessage", "Error updating role: " + e.getMessage());
         }
         return "redirect:/admin/dashboard";
+
     }
 
     @PostMapping("/users/{id}/delete")
