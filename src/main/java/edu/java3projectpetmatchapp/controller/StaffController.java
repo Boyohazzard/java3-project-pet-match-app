@@ -35,7 +35,7 @@ public class StaffController {
         return "staff/dashboard";
     }
 
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @GetMapping("/addpet")
     public String showAddPetForm(Model model) {
         model.addAttribute("addPetForm", new AddPetForm());
@@ -44,7 +44,7 @@ public class StaffController {
         return "staff/addpet";
     }
 
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @PostMapping("/addpet")
     public String addPet(
             @ModelAttribute("addPetForm") @Valid AddPetForm form,
@@ -67,7 +67,7 @@ public class StaffController {
         return "redirect:dashboard";
     }
 
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @GetMapping("/updatepet")
     public String showUpdatePetPage(@RequestParam("id") Long id, Model model) {
         Pet pet = petService.getPetById(id);
@@ -79,7 +79,7 @@ public class StaffController {
         return "staff/updatepet";
     }
 
-    @PreAuthorize("hasRole('STAFF')")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @PostMapping("/updatepet")
     public String UpdatePet(
             @ModelAttribute("updatePetForm") @Valid UpdatePetForm form,
