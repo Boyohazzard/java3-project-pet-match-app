@@ -67,11 +67,31 @@ public class StaffController {
     @PreAuthorize("hasRole('STAFF')")
     @GetMapping("/applications/{id}")
     public String viewApplication(@PathVariable Long id, Model model) {
-        Application application = appService.getAppById(id);
-        model.addAttribute("application", application);
-        model.addAttribute("pet", application.getPet());
-        model.addAttribute("user", application.getUser());
-        return "staff/application";
+        try {
+            Application application = appService.getAppById(id);
+            
+            // Debug: Print application details to see what's actually in the database
+            System.out.println("=== APPLICATION DEBUG INFO ===");
+            System.out.println("Application ID: " + application.getId());
+            System.out.println("Date App Received: " + application.getDateAppReceived());
+            System.out.println("Application Status: " + application.getApplicationStatus());
+            System.out.println("Home Type: " + application.getHometype());
+            System.out.println("Household Situation: " + application.getHouseholdSituation());
+            System.out.println("Other Pets: " + application.getOtherPets());
+            System.out.println("Yard Access: " + application.getYardAccess());
+            System.out.println("Additional Info: " + application.getAdditionalInfo());
+            System.out.println("===============================");
+            
+            model.addAttribute("application", application);
+            model.addAttribute("pet", application.getPet());
+            model.addAttribute("user", application.getUser());
+            return "staff/application";
+        } catch (NoSuchElementException e) {
+            return "redirect:/staff/applications?error=Application not found";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/staff/applications?error=An error occurred while loading the application";
+        }
     }
 
     @PreAuthorize("hasRole('STAFF')")

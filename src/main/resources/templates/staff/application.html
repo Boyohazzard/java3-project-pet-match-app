@@ -32,32 +32,32 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Date Received:</label>
-                                <p class="form-control-plaintext" th:text="${application.dateAppReceived}"></p>
+                                <p class="form-control-plaintext" th:text="${application.dateAppReceived != null ? application.dateAppReceived : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Status:</label>
                                 <span class="badge fs-6"
                                       th:classappend="${application.applicationStatus == 'APPROVED'} ? 'bg-success' :
                                                       (${application.applicationStatus == 'REJECTED'} ? 'bg-danger' : 'bg-warning text-dark')"
-                                      th:text="${application.applicationStatus}">Status</span>
+                                      th:text="${application.applicationStatus != null ? application.applicationStatus : 'Not specified'}">Status</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Home Type:</label>
-                                <p class="form-control-plaintext" th:text="${application.hometype}"></p>
+                                <p class="form-control-plaintext" th:text="${application.hometype != null ? application.hometype : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Household Situation:</label>
-                                <p class="form-control-plaintext" th:text="${application.householdSituation}"></p>
+                                <p class="form-control-plaintext" th:text="${application.householdSituation != null ? application.householdSituation : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Other Pets:</label>
-                                <p class="form-control-plaintext" th:text="${application.otherPets}"></p>
+                                <p class="form-control-plaintext" th:text="${application.otherPets != null ? application.otherPets : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Yard Access:</label>
-                                <p class="form-control-plaintext" th:text="${application.yardAccess ? 'Yes' : 'No'}"></p>
+                                <p class="form-control-plaintext" th:text="${application.yardAccess != null ? (application.yardAccess ? 'Yes' : 'No') : 'Not specified'}"></p>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Additional Information:</label>
-                                <div class="form-control-plaintext border p-3 bg-light" th:text="${application.additionalInfo}"></div>
+                                <div class="form-control-plaintext border p-3 bg-light" th:text="${application.additionalInfo != null ? application.additionalInfo : 'No additional information provided'}"></div>
                             </div>
                         </div>
                     </div>
