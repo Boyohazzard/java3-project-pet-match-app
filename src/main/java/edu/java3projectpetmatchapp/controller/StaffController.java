@@ -2,9 +2,11 @@ package edu.java3projectpetmatchapp.controller;
 
 import edu.java3projectpetmatchapp.dto.AddPetForm;
 import edu.java3projectpetmatchapp.dto.UpdatePetForm;
+import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
 import edu.java3projectpetmatchapp.enums.PetType;
 import edu.java3projectpetmatchapp.enums.Sociability;
+import edu.java3projectpetmatchapp.service.ApplicationService;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.PetService;
 import jakarta.validation.Valid;
@@ -26,6 +28,8 @@ public class StaffController {
     private CustomUserDetailsService userService;
     @Autowired
     private PetService petService;
+    @Autowired
+    private ApplicationService appService;
 
     @GetMapping("/dashboard")
     public String showStaffDashboard(Model model) {
@@ -36,7 +40,20 @@ public class StaffController {
         return "staff/dashboard";
     }
 
+<<<<<<< Updated upstream
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+=======
+    @GetMapping("/applicationslist")
+    public String showStaffApplications(Model model) {
+
+        List<Application> applications = appService.getAllApplications();
+
+        model.addAttribute("applications", applications);
+        return "staff/applicationslist";
+    }
+
+    @PreAuthorize("hasRole('STAFF')")
+>>>>>>> Stashed changes
     @GetMapping("/addpet")
     public String showAddPetForm(Model model) {
         model.addAttribute("addPetForm", new AddPetForm());

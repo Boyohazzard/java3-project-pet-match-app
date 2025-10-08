@@ -66,10 +66,14 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .build();
 
     }
-
-    public Optional<User> getUserEntityByEmail(String email) {
-        return userRepo.findUserByEmail(email);
+    public User getUserEntityByEmail(String email) {
+        return userRepo.findUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
+    // seeing if I could change to remove <Optional> outside the repo
+    //public Optional<User> getUserEntityByEmail(String email) {
+    //    return userRepo.findUserByEmail(email);
+    //}
 
     public ProfileData getProfileData(String email) {
         User user = userRepo.findUserByEmail(email)

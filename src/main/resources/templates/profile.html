@@ -64,17 +64,17 @@
         <div th:each="app : ${applications}" class="row g-2 align-items-center mb-2 p-2 border rounded-3 bg-white shadow-sm">
 
             <div class="col-sm-9 col-md-8">
-                <span class="fw-bold" th:text="${app.petName}">pet_name</span>
-                <span class="text-muted small ms-2" th:text="${app.petType}">pet_type</span>
+                <span class="fw-bold" th:text="${app.pet.getPetName()}">pet name</span>
+                <span class="text-muted small ms-2" th:text="${app.pet.getPetType()}">pet type</span>
 
-                <a th:href="@{/pet/{id}(id=${app.petId})}" class="stretched-link visually-hidden">View Pet</a>
+                <a th:href="@{/pet/{id}(id=${app.pet.getId()})}" class="stretched-link visually-hidden">View Pet</a>
             </div>
 
             <div class="col-sm-3 col-md-4 text-end">
+
                 <span class="badge text-uppercase"
-                      th:classappend="${app.applicationStatus == 'approved'} ? 'bg-success' :
-                                      ${app.applicationStatus == 'rejected'} ? 'bg-danger' :
-                                      'bg-secondary'"
+                      th:classappend="${app.applicationStatus == 'APPROVED'} ? 'bg-danger' :
+                (${app.applicationStatus == 'REJECTED'} ? 'bg-warning text-dark' : 'bg-success')"
                       th:text="${app.applicationStatus}">application_status</span>
             </div>
 

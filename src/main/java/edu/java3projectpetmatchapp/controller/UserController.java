@@ -1,10 +1,16 @@
 package edu.java3projectpetmatchapp.controller;
 
+import edu.java3projectpetmatchapp.dto.PetApplicationForm;
 import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
 import edu.java3projectpetmatchapp.dto.UserProfileUpdateForm;
+import edu.java3projectpetmatchapp.entity.Application;
+import edu.java3projectpetmatchapp.entity.Pet;
 import edu.java3projectpetmatchapp.entity.User;
+import edu.java3projectpetmatchapp.enums.*;
+import edu.java3projectpetmatchapp.service.ApplicationService;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
+import edu.java3projectpetmatchapp.service.PetService;
 import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,11 +31,18 @@ public class UserController {
 
     private final CustomUserDetailsService userService;
     private final S3StorageService s3Service;
+    private final PetService petService;
+    private final ApplicationService appService;
 
     // Required for 'final' fields.
-    public UserController(CustomUserDetailsService userService, S3StorageService s3Service) {
+    public UserController(CustomUserDetailsService userService,
+                          S3StorageService s3Service,
+                          PetService petService,
+                          ApplicationService appService) {
         this.userService = userService;
         this.s3Service = s3Service;
+        this.petService = petService;
+        this.appService = appService;
     }
 
     // routes for everyone \\
@@ -105,9 +118,7 @@ public class UserController {
     @GetMapping("/profile/edit")
     public String showProfileEditForm(Model model, Principal principal) {
 
-        User userEntity = userService.getUserEntityByEmail(principal.getName())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found for profile edit."));
-
+        User userEntity = userService.getUserEntityByEmail(principal.getName());
         UserProfileUpdateForm form = new UserProfileUpdateForm();
         form.setFirstName(userEntity.getFirstName());
         form.setLastName(userEntity.getLastName());
@@ -131,16 +142,14 @@ public class UserController {
             Model model) {
 
         Runnable reloadModel = () -> {
-            User userEntity = userService.getUserEntityByEmail(principal.getName())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found after error."));
+            User userEntity = userService.getUserEntityByEmail(principal.getName());
             model.addAttribute("user", userEntity);
             model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
         };
 
         if (result.hasErrors()) {
 
-            User userEntity = userService.getUserEntityByEmail(principal.getName())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found after failed edit."));
+            User userEntity = userService.getUserEntityByEmail(principal.getName());
 
             model.addAttribute("user", userEntity);
             model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
@@ -161,5 +170,50 @@ public class UserController {
         }
 
         return "redirect:/profile";
+    }
+
+    @GetMapping("/pet/{id}/apply")
+    public String showPetApplicationForm(@PathVariable Long id,
+                                         Model model,
+                                         Principal principal) {
+        Pet pet = petService.getPetById(id);
+        User user = userService.getUserEntityByEmail(principal.getName());
+
+        PetApplicationForm form = new PetApplicationForm();
+        form.setPet(pet);
+        form.setUser(user);
+
+        model.addAttribute("petApplicationForm", form);
+        model.addAttribute("homeType", HomeType.values());
+        model.addAttribute("householdSituation", HouseholdSituation.values());
+        model.addAttribute("otherPets", OtherPets.values());
+
+        return "pet/apply";
+    }
+
+    @PostMapping("/pet/{id}/apply")
+    public String applyForPet(@PathVariable Long id,
+                              @ModelAttribute("petApplicationForm")
+                              @Valid PetApplicationForm form,
+                              BindingResult result,
+                              Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("homeType", HomeType.values());
+            model.addAttribute("householdSituation", HouseholdSituation.values());
+            model.addAttribute("otherPets", OtherPets.values());
+            return "pet/apply";
+        }
+        try {
+            appService.registerNewApplication(form);
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("homeType", HomeType.values());
+            model.addAttribute("householdSituation", HouseholdSituation.values());
+            model.addAttribute("otherPets", OtherPets.values());
+            model.addAttribute("error", "An error occurred while saving the application.");
+            return "/pet/apply";
+        }
+        return "redirect:/pet/" + form.getPet().getId();
     }
 }

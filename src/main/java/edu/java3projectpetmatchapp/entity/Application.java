@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -48,6 +50,14 @@ public class Application {
             message="Must be less than 1000 characters")
     @Column(name = "additional_info", length = 1000)
     private String additionalInfo;
+
+    @Column(name = "date_app_received", nullable = false)
+    private LocalDate dateAppReceived;
+
+    @PrePersist
+    public void prePersist() {
+        this.dateAppReceived = LocalDate.now();
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "application_status", length = 15)
