@@ -21,18 +21,17 @@
             <table class="table table-hover table-striped shadow-sm rounded">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">ID</th>
+                    <th th:replace="~{fragments/tablesort :: usersortableHeader('id', 'ID')}"></th>
                     <th scope="col">Name</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Role</th>
+                    <th th:replace="~{fragments/tablesort :: usersortableHeader('email', 'email')}"></th>
+                    <th th:replace="~{fragments/tablesort :: usersortableHeader('role', 'role')}"></th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Loop through all users fetched from the controller -->
                 <tr th:each="user : ${users}">
                     <td th:text="${user.id}">1</td>
-                    <td th:text="${user.firstName} + ' ' + ${user.lastName}">John Doe</td>
+                    <td th:text="|${user.firstName} ${user.lastName}|">John Doe</td>
                     <td th:text="${user.email}">user@example.com</td>
                     <td>
                         <span class="badge"
@@ -42,13 +41,10 @@
                     </td>
                     <td>
                         <div class="btn-group btn-group-sm" role="group">
-                            <!-- Link to view user's profile -->
                             <a th:href="@{/profile/{id}(id=${user.id})}" class="btn btn-outline-info">View Profile</a>
 
-                            <!-- Link to edit user's role/data -->
                             <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" class="btn btn-outline-secondary">Edit Role</a>
 
-                            <!-- Button to trigger delete modal -->
                             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${user.id}">Delete</button>
                         </div>
                     </td>
@@ -58,7 +54,6 @@
         </div>
     </div>
 
-    <!-- Modals for Delete Confirmation (One per user) -->
     <div th:each="user : ${users}">
         <div class="modal fade" th:id="'deleteModal' + ${user.id}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">

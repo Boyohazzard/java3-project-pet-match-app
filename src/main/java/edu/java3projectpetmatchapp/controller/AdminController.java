@@ -4,6 +4,7 @@ import edu.java3projectpetmatchapp.dto.UserRoleUpdateDto;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +25,17 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard")
-    public String showAdminDashboard(Model model) {
-        List<User> users = userService.getAllUsers();
+    public String showUserList(@RequestParam(defaultValue = "id") String sort,
+                               @RequestParam(defaultValue = "asc") String dir,
+                               Model model) {
+
+        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<User> users = userService.getAllUsersSorted(sort, direction);
+
         model.addAttribute("users", users);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "admin_dashboard";
     }
 

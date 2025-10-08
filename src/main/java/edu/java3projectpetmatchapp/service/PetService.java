@@ -6,23 +6,26 @@ import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
 public class PetService {
 
-    @Autowired
-    private PetRepository petRepo;
-    @Autowired
-    private ApplicationRepository appRepo;
-    @Autowired
-    S3StorageService s3Service;
+    private final PetRepository petRepo;
+    private final ApplicationRepository appRepo;
+    private final PetCacheService petCacheService;
+    private final S3StorageService s3Service;
 
     public Pet getPetById(long id) {
         System.out.println("Searching for pet in DB...");
@@ -31,7 +34,31 @@ public class PetService {
                 .orElseThrow(() -> new NoSuchElementException("No pet found with ID: " + id));
     }
 
-    public List<Pet> getAllPets() { return petRepo.findAll(); }
+    public List<Pet> getAllPets() {
+        return petRepo.findAll();
+    }
+
+    public List<Pet> getAllPetsSorted(String sortField, Sort.Direction direction) {
+        List<Pet> pets = new ArrayList<>(petCacheService.getAllPets());
+        if (!isValidSortField(sortField)) sortField = "id";
+        pets.sort(getComparator(sortField, direction));
+        return pets;
+    }
+
+    private boolean isValidSortField(String field) {
+        return List.of("id", "petName", "datePetSheltered", "availability").contains(field);
+    }
+
+    private Comparator<Pet> getComparator(String field, Sort.Direction direction) {
+        Comparator<Pet> comparator = switch (field) {
+            case "petName" -> Comparator.comparing(Pet::getPetName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "datePetSheltered" -> Comparator.comparing(Pet::getDatePetSheltered, Comparator.nullsLast(Comparator.naturalOrder()));
+            case "availability" -> Comparator.comparing(Pet::getAvailability);
+            default -> Comparator.comparing(Pet::getId);
+        };
+
+        return direction == Sort.Direction.DESC ? comparator.reversed() : comparator;
+    }
 
     public List<Application> getAllPetApplications(Pet pet) {
         return appRepo.findByPet(pet);

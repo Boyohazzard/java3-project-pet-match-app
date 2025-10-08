@@ -23,10 +23,10 @@
             <table class="table table-hover table-striped shadow-sm rounded">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Date Sheltered</th>
-                    <th scope="col">Availability</th>
+                    <th th:replace="~{fragments/tablesort :: petsortableHeader('id', 'ID')}"></th>
+                    <th th:replace="~{fragments/tablesort :: petsortableHeader('petName', 'Pet Name')}"></th>
+                    <th th:replace="~{fragments/tablesort :: petsortableHeader('datePetSheltered', 'Date Sheltered')}"></th>
+                    <th th:replace="~{fragments/tablesort :: petsortableHeader('availability', 'Availability')}"></th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>

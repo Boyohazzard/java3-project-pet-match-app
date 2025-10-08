@@ -4,7 +4,6 @@ import edu.java3projectpetmatchapp.dto.PetApplicationForm;
 import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.RegistrationForm;
 import edu.java3projectpetmatchapp.dto.UserProfileUpdateForm;
-import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.enums.*;

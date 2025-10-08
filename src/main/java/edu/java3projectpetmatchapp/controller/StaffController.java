@@ -10,7 +10,8 @@ import edu.java3projectpetmatchapp.service.ApplicationService;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.PetService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -23,33 +24,42 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/staff")
 public class StaffController {
 
-    @Autowired
-    private CustomUserDetailsService userService;
-    @Autowired
-    private PetService petService;
-    @Autowired
-    private ApplicationService appService;
-    @Autowired
-    private edu.java3projectpetmatchapp.service.S3StorageService s3Service;
+    private final CustomUserDetailsService userService;
+    private final PetService petService;
+    private final ApplicationService appService;
+    private final edu.java3projectpetmatchapp.service.S3StorageService s3Service;
 
     @GetMapping("/dashboard")
-    public String showStaffDashboard(Model model) {
+    public String showStaffDashboard(@RequestParam(defaultValue = "id") String sort,
+                                     @RequestParam(defaultValue = "asc") String dir,
+                                     Model model) {
 
-        List<Pet> pets = petService.getAllPets();
+        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<Pet> pets = petService.getAllPetsSorted(sort, direction);
 
         model.addAttribute("pets", pets);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "staff/dashboard";
     }
 
     @GetMapping("/applications")
-    public String showStaffApplications(Model model) {
+    public String showStaffApplications(@RequestParam(defaultValue = "id") String sort,
+                                        @RequestParam(defaultValue = "asc") String dir,
+                                        Model model) {
 
-        List<Application> applications = appService.getAllApplications();
+        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<Application> applications = appService.getAllApplicationsSorted(sort, direction);
 
         model.addAttribute("applications", applications);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "staff/applications";
     }
 
@@ -63,7 +73,7 @@ public class StaffController {
         return "staff/addpet";
     }
 
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    @PreAuthorize("hasAnyRole('STAFF')")
     @PostMapping("/addpet")
     public String addPet(
             @ModelAttribute("addPetForm") @Valid AddPetForm form,
@@ -86,7 +96,7 @@ public class StaffController {
         return "redirect:dashboard";
     }
 
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    @PreAuthorize("hasAnyRole('STAFF')")
     @GetMapping("/updatepet")
     public String showUpdatePetPage(@RequestParam("id") Long id, Model model) {
         Pet pet = petService.getPetById(id);
@@ -99,7 +109,7 @@ public class StaffController {
         return "staff/updatepet";
     }
 
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    @PreAuthorize("hasAnyRole('STAFF')")
     @PostMapping("/updatepet")
     public String UpdatePet(
             @ModelAttribute("updatePetForm") @Valid UpdatePetForm form,
@@ -134,6 +144,8 @@ public class StaffController {
         }
         return "redirect:/staff/dashboard";
     }
+
+    @PreAuthorize("hasAnyRole('STAFF')")
     @PostMapping("/pet/{id}/delete")
     public String deletePet(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {

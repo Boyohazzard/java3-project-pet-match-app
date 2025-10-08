@@ -9,33 +9,28 @@ import edu.java3projectpetmatchapp.enums.Role;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepo;
     private final ApplicationRepository appRepo;
     private final S3StorageService s3Service;
-
-    public CustomUserDetailsService(
-            PasswordEncoder passwordEncoder,
-            UserRepository userRepo,
-            ApplicationRepository appRepo,
-            S3StorageService s3Service) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepo = userRepo;
-        this.appRepo = appRepo;
-        this.s3Service = s3Service;
-    }
+    private final UserCacheService userCacheService;
 
     public void registerNewUser(RegistrationForm form) {
         if (!form.getPassword().equals(form.getConfirmPassword())) {
@@ -70,10 +65,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userRepo.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
-    // seeing if I could change to remove <Optional> outside the repo
-    //public Optional<User> getUserEntityByEmail(String email) {
-    //    return userRepo.findUserByEmail(email);
-    //}
 
     public ProfileData getProfileData(String email) {
         User user = userRepo.findUserByEmail(email)
@@ -119,10 +110,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         userRepo.save(user);
     }
 
-    // List of all users for admin dashboard
-    public List<User> getAllUsers(){
-        return userRepo.findAll();
-    }
+    //public List<User> getAllUsers(){
+    //    return userRepo.findAll();
+    //}
 
     public Optional<User> getUserEntityById(Long id){
         return userRepo.findById(id);
@@ -142,11 +132,28 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + userId));
 
-        // Delete all associated Applications
         appRepo.deleteByUser(user);
-
-        // Then delete the User
         userRepo.delete(user);
     }
 
+    public List<User> getAllUsersSorted(String sortField, Sort.Direction direction) {
+        List<User> users = new ArrayList<>(userCacheService.getAllUsers());
+        if (!isValidSortField(sortField)) sortField = "id";
+        users.sort(getComparator(sortField, direction));
+        return users;
+    }
+
+    private boolean isValidSortField(String field) {
+        return List.of("id", "email", "role").contains(field);
+    }
+
+    private Comparator<User> getComparator(String field, Sort.Direction direction) {
+        Comparator<User> comparator = switch (field) {
+            case "email" -> Comparator.comparing(User::getEmail, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "role" -> Comparator.comparing(User::getRole, Comparator.nullsLast(Comparator.naturalOrder()));
+            default -> Comparator.comparing(User::getId);
+        };
+
+        return direction == Sort.Direction.DESC ? comparator.reversed() : comparator;
+    }
 }
