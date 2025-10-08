@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Applications list</title>
+
+        <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+        <head th:replace="~{fragments/header.html :: header-head}">
+        <title>Admin Dashboard - User Management</title>
+</head>
+<body>
+
+<div th:replace="~{fragments/header.html :: header-nav}"></div>
+
+<main class="container mt-5 mb-5">
+
+    <h1 class="display-5 mb-4 text-center">Applications list</h1>
+    <p class="text-center text-muted">Manage all applications</p>
+    <a th:href="@{dashboard}" class="btn btn-outline-info">back to pet list</a>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <table class="table table-hover table-striped shadow-sm rounded">
+                <thead class="table-dark">
+                <tr>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('email', 'Email')}"></th>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('petName', 'Pet Name')}"></th>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('dateAppReceived', 'Date received')}"></th>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('status', ' Application Status')}"></th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loop through all users fetched from the controller -->
+                <tr th:each="app : ${applications}">
+                    <td th:text="${app.user.getEmail()}"></td>
+                    <td th:text="${app.pet.getPetName()}"></td>
+                    <td th:text="${app.dateAppReceived}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${app.applicationStatus == 'APPROVED'} ? 'bg-danger' :
+                                              (${app.applicationStatus == 'REJECTED'} ? 'bg-warning text-dark' : 'bg-success')"
+                              th:text="${app.applicationStatus}">application_status</span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                       <!--     <a th:href="@{/pet/{id}(id=${app.id})}" class="btn btn-outline-info">View Application</a> -->
+
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${app.id}">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modals for Delete Confirmation (One per user) -->
+    <div th:each="app : ${applications}">
+        <div class="modal fade" th:id="'deleteModal' + ${app.id}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to permanently delete application:
+                            <strong th:text="${app.id} + ' (' + ${app.dateAppReceived} + ')'"></strong>?</p>
+                        <p class="text-danger small">This action cannot be undone and will delete all associated applications.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <!-- <form th:action="@{/staff/users/{id}/delete(id=${pet.id})}" method="post"> -->
+                            <button type="submit" class="btn btn-danger">Delete Pet</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div th:replace="~{fragments/footer.html :: footer-fragment}"></div>
+
+</body>
+</html></title>
+</head>
+<body>
+
+</body>
+</html>
