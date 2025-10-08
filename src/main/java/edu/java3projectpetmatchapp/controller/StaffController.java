@@ -65,6 +65,16 @@ public class StaffController {
     }
 
     @PreAuthorize("hasRole('STAFF')")
+    @GetMapping("/applications/{id}")
+    public String viewApplication(@PathVariable Long id, Model model) {
+        Application application = appService.getAppById(id);
+        model.addAttribute("application", application);
+        model.addAttribute("pet", application.getPet());
+        model.addAttribute("user", application.getUser());
+        return "staff/application";
+    }
+
+    @PreAuthorize("hasRole('STAFF')")
     @GetMapping("/addpet")
     public String showAddPetForm(Model model) {
         model.addAttribute("addPetForm", new AddPetForm());

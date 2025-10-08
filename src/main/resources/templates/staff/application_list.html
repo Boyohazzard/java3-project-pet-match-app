@@ -44,7 +44,8 @@
                     </td>
                     <td>
                         <div class="btn-group btn-group-sm" role="group">
-                       <!--     <a th:href="@{/pet/{id}(id=${app.id})}" class="btn btn-outline-info">View Application</a> -->
+                            <a th:href="@{/staff/applications/{id}(id=${app.id})}"
+                               class="btn btn-outline-info">View Application</a>
 
                             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:data-bs-target="'#deleteModal' + ${app.id}">Delete</button>
                         </div>
