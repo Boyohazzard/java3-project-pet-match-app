@@ -61,7 +61,7 @@ public class StaffController {
         model.addAttribute("applications", applications);
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
-        return "application_list";
+        return "staff/application_list";
     }
 
     @PreAuthorize("hasRole('STAFF')")
