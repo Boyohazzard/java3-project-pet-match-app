@@ -121,9 +121,9 @@
   2025-10-08
 
   Jonathan
-  What did I do yesterday?
-  What will I do today?
-  What impediments are blocking me?
+  What did I do yesterday? Set up applications related pages and linking the routing
+  What will I do today? look at Ajax and Stripe for potential integration
+  What impediments are blocking me? nothing major in the way right now
 
   Elizabeth
   What did I do yesterday?
