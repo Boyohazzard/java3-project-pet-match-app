@@ -26,6 +26,7 @@ public class SecurityConfiguration {
                     registry.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
                     registry.requestMatchers(HttpMethod.GET, "/register").permitAll();
                     registry.requestMatchers(HttpMethod.POST, "/register").permitAll();
+                    registry.requestMatchers(HttpMethod.GET, "/pet/*").permitAll();
                     registry.requestMatchers("/admin/**").hasRole("ADMIN");
                     registry.requestMatchers("/staff/**").hasRole("STAFF");
                     registry.anyRequest().authenticated();

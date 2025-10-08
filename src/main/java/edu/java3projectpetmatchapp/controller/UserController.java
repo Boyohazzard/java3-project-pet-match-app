@@ -48,7 +48,8 @@ public class UserController {
     // routes for everyone \\
 
     @GetMapping({"/", "/index", "/home"})
-    public String viewIndex() {
+    public String viewIndex(Model model) {
+        model.addAttribute("pets", petService.getAllPets());
         return "index";
     }
 

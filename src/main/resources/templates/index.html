@@ -9,14 +9,36 @@
 <div th:replace="~{fragments/header.html :: header-nav}"></div>
 <main class="container mt-4 mb-5" style="padding-top: 30px;">
 
-<div class="container mt-5 text-center">
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to Pets, Pets, and More Pets!</h1>
-        <h3>Our mission is to inspire you to adopt (don't shop).</h3>
-        <p class="lead">Find your next furry family member. We are dedicated to finding loving homes for cats and dogs.</p>
+    <div class="jumbotron text-center">
+        <h1 class="mb-0 text-dark">Welcome to Pets, Pets, and More Pets!</h1>
+        <small class="lead">Our mission is to inspire you to adopt (not shop for) your next furry
+            family member.</small>
     </div>
 
-</div>
+
+    <div class="row">
+    <div class="row g-4" th:if="${pets}">
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3" th:each="pet : ${pets}">
+            <div class="card h-100">
+                <div class="position-relative">
+                    <div class="ratio ratio-1x1">
+                        <img th:src="${pet.petPhotoUrl}"
+                             alt="Pet Profile Photo"
+                             class="w-100 h-100"
+                             style="object-fit: cover;">
+                    </div>
+                    <div class="position-absolute bottom-0 start-0 end-0">
+                        <span class="badge bg-dark bg-opacity-75 text-white w-100 rounded-0" th:text="${pet.availability}">AVAILABLE</span>
+                    </div>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title mb-3" th:text="${pet.petName}">Pet Name</h5>
+                    <a class="btn btn-primary mt-auto" th:href="@{'/pet/' + ${pet.id}}">View profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 </main>
 <div th:replace="~{fragments/footer.html :: footer-fragment}"></div>
 

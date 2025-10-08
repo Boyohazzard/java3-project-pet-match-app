@@ -1,9 +1,7 @@
 package edu.java3projectpetmatchapp.service;
 
-import edu.java3projectpetmatchapp.dto.AddPetForm;
 import edu.java3projectpetmatchapp.dto.PetApplicationForm;
 import edu.java3projectpetmatchapp.entity.Application;
-import edu.java3projectpetmatchapp.entity.Pet;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
