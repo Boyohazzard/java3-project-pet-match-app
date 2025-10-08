@@ -88,17 +88,18 @@ public class StaffController {
             BindingResult result,
             Model model) {
 
-        if (result.hasErrors()) {
-            model.addAttribute("petTypes", PetType.values());
-            model.addAttribute("sociabilityOptions", Sociability.values());
-
+        Runnable reloadPhotoUrl = () -> {
             try {
                 Pet pet = petService.getPetById(form.getId());
                 model.addAttribute("currentPetPhotoUrl", pet.getPetPhotoUrl());
             } catch (NoSuchElementException ignored) {
-                // If pet is somehow missing, the original form DTO is used.
             }
+        };
 
+        if (result.hasErrors()) {
+            model.addAttribute("petTypes", PetType.values());
+            model.addAttribute("sociabilityOptions", Sociability.values());
+            reloadPhotoUrl.run();
             return "staff/updatepet";
         }
         try {
@@ -109,13 +110,7 @@ public class StaffController {
             e.printStackTrace();
             model.addAttribute("petTypes", PetType.values());
             model.addAttribute("sociabilityOptions", Sociability.values());
-
-            // Reload current photo URL on exception
-            try {
-                Pet pet = petService.getPetById(form.getId());
-                model.addAttribute("currentPetPhotoUrl", pet.getPetPhotoUrl());
-            } catch (NoSuchElementException ignored) {}
-
+            reloadPhotoUrl.run();
             model.addAttribute("error", "An error occurred while saving the pet.");
             return "staff/updatepet";
         }
