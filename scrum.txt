@@ -122,13 +122,13 @@
 
   Jonathan
   What did I do yesterday? Set up applications related pages and linking the routing
-  What will I do today? look at Ajax and Stripe for potential integration
+  What will I do today? look at Ajax and Stripe for potential integration Make tables sortable by category
   What impediments are blocking me? nothing major in the way right now
 
   Elizabeth
-  What did I do yesterday?
-  What will I do today?
-  What impediments are blocking me?
+  What did I do yesterday? enabled pet photos and useer photo updates, admin can edit users, navbar link by role
+  What will I do today? made application page made a beautiful index of cards and added profiles
+  What impediments are blocking me? the usual typos and details
 
   2025-10-09
 

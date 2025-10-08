@@ -4,6 +4,9 @@ import edu.java3projectpetmatchapp.dto.UserRoleUpdateDto;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,19 +17,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
 
     private final CustomUserDetailsService userService;
 
-    public AdminController(CustomUserDetailsService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping("/dashboard")
-    public String showAdminDashboard(Model model) {
-        List<User> users = userService.getAllUsers();
+    public String showUserList(@RequestParam(defaultValue = "id") String sort,
+                               @RequestParam(defaultValue = "asc") String dir,
+                               Model model) {
+
+        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<User> users = userService.getAllUsersSorted(sort, direction);
+
         model.addAttribute("users", users);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
         return "admin_dashboard";
     }
 
@@ -47,6 +55,7 @@ public class AdminController {
         return "admin_user_edit";
     }
 
+    @CacheEvict(value = "allUserss", allEntries = true)
     @PostMapping("/users/{id}/edit")
     public String handleRoleUpdate(
             @PathVariable Long id,
@@ -75,6 +84,7 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
+    @CacheEvict(value = "allUserss", allEntries = true)
     @PostMapping("/users/{id}/delete")
     public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {

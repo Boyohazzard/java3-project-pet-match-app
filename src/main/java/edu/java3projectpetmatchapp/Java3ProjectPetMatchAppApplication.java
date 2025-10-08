@@ -2,8 +2,10 @@ package edu.java3projectpetmatchapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
+@EnableCaching
 public class Java3ProjectPetMatchAppApplication {
 
     public static void main(String[] args) {

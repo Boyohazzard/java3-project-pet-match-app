@@ -23,17 +23,17 @@
             <table class="table table-hover table-striped shadow-sm rounded">
                 <thead class="table-dark">
                 <tr>
-                    <th scope="col">Applicant Name</th>
-                    <th scope="col">Pet name</th>
-                    <th scope="col">Date Received</th>
-                    <th scope="col">Status</th>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('email', 'Email')}"></th>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('petName', 'Pet Name')}"></th>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('dateAppReceived', 'Date received')}"></th>
+                    <th th:replace="~{fragments/tablesort :: appsortableHeader('status', ' Application Status')}"></th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- Loop through all users fetched from the controller -->
                 <tr th:each="app : ${applications}">
-                    <td th:text="${app.user.getFirstName()}"></td>
+                    <td th:text="${app.user.getEmail()}"></td>
                     <td th:text="${app.pet.getPetName()}"></td>
                     <td th:text="${app.dateAppReceived}"></td>
                     <td>
