@@ -6,6 +6,7 @@ import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
+import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,8 @@ public class PetService {
     private PetRepository petRepo;
     @Autowired
     private ApplicationRepository appRepo;
+    @Autowired
+    S3StorageService s3Service;
 
     public Pet getPetById(long id) {
         System.out.println("Searching for pet in DB...");
@@ -49,7 +52,8 @@ public class PetService {
         } else {
             pet.setDatePetSheltered(form.getDatePetSheltered());
         }
-        //pet.setPetPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
+
+        pet.setPetPhotoUrl(s3Service.getDefaultPetPhotoUrl());
 
         petRepo.save(pet);
     }
@@ -66,6 +70,8 @@ public class PetService {
         form.setAbout(pet.getAbout());
         form.setAge(pet.getAge());
         form.setDatePetSheltered(pet.getDatePetSheltered());
+        form.setNewPhoto(null);
+        form.setDeletePhoto(false);
         return form;
     }
 
@@ -80,7 +86,27 @@ public class PetService {
         pet.setAbout(form.getAbout());
         pet.setAge(form.getAge());
         pet.setDatePetSheltered(form.getDatePetSheltered());
-        //pet.setPetPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
+
+        String currentPhotoUrl = pet.getPetPhotoUrl();
+        String defaultUrl = s3Service.getDefaultPetPhotoUrl();
+
+        // Photo Deletion or Replacement
+        if (form.isDeletePhoto()) {
+            if (currentPhotoUrl != null && !currentPhotoUrl.equals(defaultUrl)) {
+                s3Service.deleteFileFromUrl(currentPhotoUrl);
+            }
+            pet.setPetPhotoUrl(defaultUrl);
+
+        } else if (form.getNewPhoto() != null && !form.getNewPhoto().isEmpty()) {
+
+            if (currentPhotoUrl != null && !currentPhotoUrl.equals(defaultUrl)) {
+                s3Service.deleteFileFromUrl(currentPhotoUrl);
+            }
+
+            String newUrl = s3Service.uploadPetPhoto(form.getNewPhoto());
+            pet.setPetPhotoUrl(newUrl);
+        }
+
 
         petRepo.save(pet);
     }

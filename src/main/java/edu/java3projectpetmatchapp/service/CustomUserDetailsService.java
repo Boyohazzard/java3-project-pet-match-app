@@ -50,7 +50,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         user.setEmail(form.getEmail());
         user.setPassword(passwordEncoder.encode(form.getPassword()));
         user.setRole(Role.USER);
-        user.setUserPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
+        user.setUserPhotoUrl(s3Service.getDefaultUserPhotoUrl());
         userRepo.save(user);
     }
 
@@ -95,20 +95,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (form.isDeletePhoto()) {
 
             // Only delete the existing file from S3 if it's NOT the default photo
-            if (!currentPhotoUrl.equals(s3Service.getDefaultProfilePhotoUrl())) {
+            if (!currentPhotoUrl.equals(s3Service.getDefaultUserPhotoUrl())) {
                 s3Service.deleteFileFromUrl(currentPhotoUrl);
             }
-            user.setUserPhotoUrl(s3Service.getDefaultProfilePhotoUrl());
+            user.setUserPhotoUrl(s3Service.getDefaultUserPhotoUrl());
 
         } else if (form.getNewPhoto() != null && !form.getNewPhoto().isEmpty()) {
 
             // Delete the old photo (if it exists and is not the default)
-            if (currentPhotoUrl != null && !currentPhotoUrl.equals(s3Service.getDefaultProfilePhotoUrl())) {
+            if (currentPhotoUrl != null && !currentPhotoUrl.equals(s3Service.getDefaultUserPhotoUrl())) {
                 s3Service.deleteFileFromUrl(currentPhotoUrl);
             }
 
             // Upload the new photo and get its URL
-            String newUrl = s3Service.uploadFile(form.getNewPhoto());
+            String newUrl = s3Service.uploadUserPhoto(form.getNewPhoto());
             user.setUserPhotoUrl(newUrl);
         }
 

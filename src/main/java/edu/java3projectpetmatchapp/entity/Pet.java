@@ -64,4 +64,7 @@ public class Pet {
     @Enumerated(EnumType.STRING)
     @Column(name = "availability", length = 50, nullable = false)
     private Availability availability = Availability.AVAILABLE;
+
+    @Column(name = "pet_photo_url")
+    private String petPhotoUrl;
 }

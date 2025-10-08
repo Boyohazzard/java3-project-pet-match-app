@@ -23,7 +23,8 @@ public class S3StorageService {
     @Value("${aws.region}")
     private String awsRegion;
 
-    private static final String DEFAULT_PHOTO_KEY = "profile_default.png";
+    private static final String DEFAULT_USER_PHOTO_KEY = "profile_default.png";
+    private static final String DEFAULT_PET_PHOTO_KEY = "pet_default.png";
 
     private final S3Client s3Client;
 
@@ -33,7 +34,18 @@ public class S3StorageService {
                 .build();
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    // For user profile photos
+    public String uploadUserPhoto(MultipartFile file) throws IOException {
+        return uploadFileInternal(file, "user-photos/");
+    }
+
+    // For pet photos
+    public String uploadPetPhoto(MultipartFile file) throws IOException {
+        return uploadFileInternal(file, "pet-photos/");
+    }
+
+    // Internal shared logic for uploading
+    private String uploadFileInternal(MultipartFile file, String pathPrefix) throws IOException {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Cannot upload empty file.");
         }
@@ -44,7 +56,7 @@ public class S3StorageService {
             fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
 
-        String uniqueFileName = "user-photos/" + UUID.randomUUID() + fileExtension;
+        String uniqueFileName = pathPrefix + UUID.randomUUID() + fileExtension;
 
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -63,7 +75,7 @@ public class S3StorageService {
 
     // Deleting Old Photo
     public void deleteFileFromUrl(String fileUrl) {
-        if (fileUrl == null || fileUrl.isEmpty() || fileUrl.contains(DEFAULT_PHOTO_KEY)) {
+        if (fileUrl == null || fileUrl.isEmpty() || fileUrl.contains(DEFAULT_USER_PHOTO_KEY) || fileUrl.contains(DEFAULT_PET_PHOTO_KEY)) {
             return;
         }
 
@@ -92,10 +104,17 @@ public class S3StorageService {
         return null;
     }
 
-    public String getDefaultProfilePhotoUrl() {
+    public String getDefaultUserPhotoUrl() {
         return String.format("https://%s.s3.%s.amazonaws.com/%s",
                 bucketName,
                 awsRegion,
-                DEFAULT_PHOTO_KEY);
+                DEFAULT_USER_PHOTO_KEY);
+    }
+
+    public String getDefaultPetPhotoUrl() {
+        return String.format("https://%s.s3.%s.amazonaws.com/%s",
+                bucketName,
+                awsRegion,
+                DEFAULT_PET_PHOTO_KEY);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/staff")
@@ -74,6 +75,7 @@ public class StaffController {
         UpdatePetForm form = petService.convertPetToForm(pet);
 
         model.addAttribute("updatePetForm", form);
+        model.addAttribute("currentPetPhotoUrl", pet.getPetPhotoUrl());
         model.addAttribute("petTypes", PetType.values());
         model.addAttribute("sociabilityOptions", Sociability.values());
         return "staff/updatepet";
@@ -89,6 +91,14 @@ public class StaffController {
         if (result.hasErrors()) {
             model.addAttribute("petTypes", PetType.values());
             model.addAttribute("sociabilityOptions", Sociability.values());
+
+            try {
+                Pet pet = petService.getPetById(form.getId());
+                model.addAttribute("currentPetPhotoUrl", pet.getPetPhotoUrl());
+            } catch (NoSuchElementException ignored) {
+                // If pet is somehow missing, the original form DTO is used.
+            }
+
             return "staff/updatepet";
         }
         try {
@@ -99,6 +109,13 @@ public class StaffController {
             e.printStackTrace();
             model.addAttribute("petTypes", PetType.values());
             model.addAttribute("sociabilityOptions", Sociability.values());
+
+            // Reload current photo URL on exception
+            try {
+                Pet pet = petService.getPetById(form.getId());
+                model.addAttribute("currentPetPhotoUrl", pet.getPetPhotoUrl());
+            } catch (NoSuchElementException ignored) {}
+
             model.addAttribute("error", "An error occurred while saving the pet.");
             return "staff/updatepet";
         }
