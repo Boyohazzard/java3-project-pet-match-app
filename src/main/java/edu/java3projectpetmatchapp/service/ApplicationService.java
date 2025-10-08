@@ -25,6 +25,7 @@ public class ApplicationService {
         return appRepo.findAppById(id)
                 .orElseThrow(() -> new NoSuchElementException("No application found with ID: " + id));
     }
+
     public List<Application> getAllApplications() { return appRepo.findAll(); }
 
     public void registerNewApplication(PetApplicationForm form) {

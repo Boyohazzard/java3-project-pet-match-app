@@ -40,20 +40,16 @@ public class StaffController {
         return "staff/dashboard";
     }
 
-<<<<<<< Updated upstream
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-=======
-    @GetMapping("/applicationslist")
+    @GetMapping("/applications")
     public String showStaffApplications(Model model) {
 
         List<Application> applications = appService.getAllApplications();
 
         model.addAttribute("applications", applications);
-        return "staff/applicationslist";
+        return "staff/applications";
     }
 
     @PreAuthorize("hasRole('STAFF')")
->>>>>>> Stashed changes
     @GetMapping("/addpet")
     public String showAddPetForm(Model model) {
         model.addAttribute("addPetForm", new AddPetForm());

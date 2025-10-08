@@ -74,22 +74,14 @@
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a class="nav-link text-dark" th:href="@{/register}">Register</a>
                 </li>
-<<<<<<< Updated upstream
-                <li class="nav-item" sec:authorize="hasAnyRole('STAFF','ADMIN')">
+                <li class="nav-item" sec:authorize="hasRole('STAFF')">
                     <a class="nav-link text-dark" th:href="@{/staff/applications}">Applications</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasAnyRole('STAFF','ADMIN')">
+                <li class="nav-item" sec:authorize="hasRole('STAFF')">
                     <a class="nav-link text-dark" th:href="@{/staff/dashboard}">Pet List</a>
                 </li>
-                <li class="nav-item" sec:authorize="hasAnyRole('STAFF','ADMIN')">
+                <li class="nav-item" sec:authorize="hasRole('STAFF')">
                     <a class="nav-link text-dark" th:href="@{/staff/addpet}">Add Pet</a>
-=======
-                <li class="nav-item" sec:authorize="hasRole('STAFF')">
-                    <a class="nav-link text-dark" th:href="@{/staff/dashboard}">Staff Pets List</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasRole('STAFF')">
-                    <a class="nav-link text-dark" th:href="@{/staff/applicationslist}">Application List</a>
->>>>>>> Stashed changes
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link text-dark" th:href="@{/admin/dashboard}">Dashboard</a>
