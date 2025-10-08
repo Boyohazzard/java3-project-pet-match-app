@@ -11,6 +11,7 @@ import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.PetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -73,6 +74,7 @@ public class StaffController {
         return "staff/addpet";
     }
 
+    @CacheEvict(value = "allPets", allEntries = true)
     @PreAuthorize("hasAnyRole('STAFF')")
     @PostMapping("/addpet")
     public String addPet(
@@ -109,6 +111,7 @@ public class StaffController {
         return "staff/updatepet";
     }
 
+    @CacheEvict(value = "allPets", allEntries = true)
     @PreAuthorize("hasAnyRole('STAFF')")
     @PostMapping("/updatepet")
     public String UpdatePet(
@@ -145,6 +148,7 @@ public class StaffController {
         return "redirect:/staff/dashboard";
     }
 
+    @CacheEvict(value = "allPets", allEntries = true)
     @PreAuthorize("hasAnyRole('STAFF')")
     @PostMapping("/pet/{id}/delete")
     public String deletePet(@PathVariable Long id, RedirectAttributes redirectAttributes) {

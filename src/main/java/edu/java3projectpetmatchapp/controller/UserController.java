@@ -12,6 +12,7 @@ import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.PetService;
 import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -71,6 +72,7 @@ public class UserController {
         return "register";
     }
 
+    @CacheEvict(value = "allUsers", allEntries = true)
     @PostMapping("/register")
     public String registerUser(
             @ModelAttribute("registrationForm") @Valid RegistrationForm form,
@@ -113,6 +115,15 @@ public class UserController {
         return "profile";
     }
 
+    @GetMapping("/pet/{id}")
+    public String viewPet(@PathVariable Long id, Model model) {
+        Pet pet = petService.getPetById(id);
+        model.addAttribute("pet", pet);
+        System.out.println("Getting pet with ID: " + id);
+
+        return "pet/detail";
+    }
+
     // Profile editing
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/profile/edit")
@@ -133,7 +144,8 @@ public class UserController {
 
         return "profile_edit";
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
+    @CacheEvict(value = "allUsers", allEntries = true)
     @PostMapping("/profile/edit")
     public String handleProfileUpdate(
             @ModelAttribute("profileUpdateForm") @Valid UserProfileUpdateForm form,
@@ -191,6 +203,7 @@ public class UserController {
         return "pet/apply";
     }
 
+    @CacheEvict(value = "allApplications", allEntries = true)
     @PostMapping("/pet/{id}/apply")
     public String applyForPet(@PathVariable Long id,
                               @ModelAttribute("petApplicationForm")
