@@ -5,6 +5,7 @@ import edu.java3projectpetmatchapp.enums.Sociability;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -39,4 +40,6 @@ public class AddPetForm {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Please enter the date the pet was sheltered")
     private LocalDate datePetSheltered;
+
+    private MultipartFile newPhoto;
 }

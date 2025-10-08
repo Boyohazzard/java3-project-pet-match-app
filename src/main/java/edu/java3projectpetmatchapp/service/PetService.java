@@ -4,11 +4,8 @@ import edu.java3projectpetmatchapp.dto.AddPetForm;
 import edu.java3projectpetmatchapp.dto.UpdatePetForm;
 import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
-import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
-import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -56,9 +53,36 @@ public class PetService {
             pet.setDatePetSheltered(form.getDatePetSheltered());
         }
 
-        pet.setPetPhotoUrl(s3Service.getDefaultPetPhotoUrl());
+        if (form.getNewPhoto() != null && !form.getNewPhoto().isEmpty()) {
+            try {
+                String newUrl = s3Service.uploadPetPhoto(form.getNewPhoto());
+                pet.setPetPhotoUrl(newUrl);
+            } catch (java.io.IOException e) {
+                // Fallback to default if upload fails
+                pet.setPetPhotoUrl(s3Service.getDefaultPetPhotoUrl());
+            }
+        } else {
+            pet.setPetPhotoUrl(s3Service.getDefaultPetPhotoUrl());
+        }
 
         petRepo.save(pet);
+    }
+
+    public void deletePet(Long id) {
+        Pet pet = petRepo.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Pet not found."));
+
+        // Remove associated applications
+        appRepo.deleteByPet(pet);
+
+        // Delete photo if not default
+        String currentPhotoUrl = pet.getPetPhotoUrl();
+        if (currentPhotoUrl != null && !currentPhotoUrl.isEmpty() &&
+                !currentPhotoUrl.equals(s3Service.getDefaultPetPhotoUrl())) {
+            s3Service.deleteFileFromUrl(currentPhotoUrl);
+        }
+
+        petRepo.delete(pet);
     }
 
     public UpdatePetForm convertPetToForm(Pet pet) {
@@ -112,17 +136,5 @@ public class PetService {
 
 
         petRepo.save(pet);
-    }
-
-    @Transactional
-    public void deletePet(Long petId) {
-        Pet pet = petRepo.findPetById(petId)
-                .orElseThrow(() -> new UsernameNotFoundException("Pet not found with ID: " + petId));
-
-        // Delete all associated Applications
-        appRepo.deleteByPet(pet);
-
-        // Then delete the User
-        petRepo.delete(pet);
     }
 }

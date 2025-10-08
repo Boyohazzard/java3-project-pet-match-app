@@ -32,6 +32,8 @@ public class StaffController {
     private PetService petService;
     @Autowired
     private ApplicationService appService;
+    @Autowired
+    private edu.java3projectpetmatchapp.service.S3StorageService s3Service;
 
     @GetMapping("/dashboard")
     public String showStaffDashboard(Model model) {
@@ -57,6 +59,7 @@ public class StaffController {
         model.addAttribute("addPetForm", new AddPetForm());
         model.addAttribute("petTypes", PetType.values());
         model.addAttribute("sociabilityOptions", Sociability.values());
+        model.addAttribute("defaultPetPhotoUrl", s3Service.getDefaultPetPhotoUrl());
         return "staff/addpet";
     }
 
