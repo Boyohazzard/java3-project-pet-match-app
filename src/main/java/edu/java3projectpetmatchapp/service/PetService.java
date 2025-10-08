@@ -4,10 +4,13 @@ import edu.java3projectpetmatchapp.dto.AddPetForm;
 import edu.java3projectpetmatchapp.dto.UpdatePetForm;
 import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
+import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -109,5 +112,17 @@ public class PetService {
 
 
         petRepo.save(pet);
+    }
+
+    @Transactional
+    public void deletePet(Long petId) {
+        Pet pet = petRepo.findPetById(petId)
+                .orElseThrow(() -> new UsernameNotFoundException("Pet not found with ID: " + petId));
+
+        // Delete all associated Applications
+        appRepo.deleteByPet(pet);
+
+        // Then delete the User
+        petRepo.delete(pet);
     }
 }

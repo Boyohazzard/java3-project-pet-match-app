@@ -18,4 +18,8 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     @Modifying
     @Transactional
     void deleteByUser(User user);
+
+    @Modifying
+    @Transactional
+    void deleteByPet(Pet pet);
 }

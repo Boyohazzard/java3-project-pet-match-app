@@ -12,10 +12,12 @@ import edu.java3projectpetmatchapp.service.PetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -126,6 +128,18 @@ public class StaffController {
             reloadPhotoUrl.run();
             model.addAttribute("error", "An error occurred while saving the pet.");
             return "staff/updatepet";
+        }
+        return "redirect:/staff/dashboard";
+    }
+    @PostMapping("/pet/{id}/delete")
+    public String deletePet(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            petService.deletePet(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Pet deleted successfully.");
+        } catch (UsernameNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Pet not found.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting pet and associated data: " + e.getMessage());
         }
         return "redirect:/staff/dashboard";
     }
