@@ -84,9 +84,12 @@
                     <label for="about" class="form-label">Bio</label>
                     <textarea id="about" rows="5" class="form-control" placeholder="Bio" readonly th:text="${pet.about}"></textarea>
                 </div>
+
+            <div class="col-12 mt-4 text-end">
+                <a th:href="@{/pet/{id}/apply(id=${pet.id})}" class="btn btn-info">Apply
+                    to adopt</a>
             </div>
-            <a th:href="@{/pet/{id}/apply(id=${pet.id})}" class="btn btn-outline-info">Apply for this Pet</a>
-        </div>
+
     </div>
 
 </main>

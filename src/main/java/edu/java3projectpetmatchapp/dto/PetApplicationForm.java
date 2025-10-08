@@ -10,9 +10,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class PetApplicationForm {
+
+    private MultipartFile newPhoto;
 
     private User user;
 

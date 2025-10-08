@@ -104,26 +104,6 @@ public class S3StorageService {
         return null;
     }
 
-//    private String extractKeyFromUrl(String fileUrl) {
-//        // Construct the expected host prefix (e.g., https://my-bucket.s3.ca-central-1.amazonaws.com/)
-//        String hostPrefix = String.format("https://%s.s3.%s.amazonaws.com/", bucketName, awsRegion);
-//
-//        // Find the index right after the host prefix.
-//        int startIndex = fileUrl.indexOf(hostPrefix);
-//
-//        if (startIndex != -1) {
-//            // Return everything after the host prefix (the key)
-//            return fileUrl.substring(startIndex + hostPrefix.length());
-//        }
-//
-//        try {
-//            return fileUrl.substring(fileUrl.indexOf(bucketName) + bucketName.length() + 1);
-//        } catch (Exception e) {
-//            System.err.println("Failed to extract S3 key for URL: " + fileUrl);
-//            return null;
-//        }
-//    }
-
     public String getDefaultUserPhotoUrl() {
         return String.format("https://%s.s3.%s.amazonaws.com/%s",
                 bucketName,
