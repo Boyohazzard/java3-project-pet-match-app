@@ -13,10 +13,11 @@
         </div>
     </div>
 
-<div>
+    <div>
     <h1 class="mb-4 text-center">Pet Application Details</h1>
+        <h3>Application ID: <span th:text="${app.id}">No ID Found</span></h3>
 
-    <!-- Application Information Section -->
+        <!-- Application Information Section -->
     <div class="row mb-5">
         <div class="col-12">
             <div class="card">
@@ -28,36 +29,36 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Application ID:</label>
-                                <p class="form-control-plaintext" th:text="${application.id}"></p>
+                                <p class="form-control-plaintext" th:text="${app.id != null ? app.id : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Date Received:</label>
-                                <p class="form-control-plaintext" th:text="${application.dateAppReceived != null ? application.dateAppReceived : 'Not specified'}"></p>
+                                <p class="form-control-plaintext" th:text="${app.dateAppReceived != null ? app.dateAppReceived : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Status:</label>
                                 <span class="badge fs-6"
-                                      th:classappend="${application.applicationStatus == 'APPROVED'} ? 'bg-success' :
-                                                      (${application.applicationStatus == 'REJECTED'} ? 'bg-danger' : 'bg-warning text-dark')"
-                                      th:text="${application.applicationStatus != null ? application.applicationStatus : 'Not specified'}">Status</span>
+                                      th:classappend="${app.applicationStatus == 'APPROVED'} ? 'bg-success' :
+                                                      (${app.applicationStatus == 'REJECTED'} ? 'bg-danger' : 'bg-warning text-dark')"
+                                      th:text="${app.applicationStatus != null ? app.applicationStatus : 'Not specified'}">Status</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Home Type:</label>
-                                <p class="form-control-plaintext" th:text="${application.hometype != null ? application.hometype : 'Not specified'}"></p>
+                                <p class="form-control-plaintext" th:text="${app.hometype != null ? app.hometype : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Household Situation:</label>
-                                <p class="form-control-plaintext" th:text="${application.householdSituation != null ? application.householdSituation : 'Not specified'}"></p>
+                                <p class="form-control-plaintext" th:text="${app.householdSituation != null ? app.householdSituation : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Other Pets:</label>
-                                <p class="form-control-plaintext" th:text="${application.otherPets != null ? application.otherPets : 'Not specified'}"></p>
+                                <p class="form-control-plaintext" th:text="${app.otherPets != null ? app.otherPets : 'Not specified'}"></p>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Yard Access:</label>
-                                <p class="form-control-plaintext" th:text="${application.yardAccess != null ? (application.yardAccess ? 'Yes' : 'No') : 'Not specified'}"></p>
+                                <p class="form-control-plaintext" th:text="${app.yardAccess != null ? (app.yardAccess ? 'Yes' : 'No') : 'Not specified'}"></p>
                             </div>
                         </div>
                     </div>
@@ -65,7 +66,7 @@
                         <div class="col-12">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Additional Information:</label>
-                                <div class="form-control-plaintext border p-3 bg-light" th:text="${application.additionalInfo != null ? application.additionalInfo : 'No additional information provided'}"></div>
+                                <div class="form-control-plaintext border p-3 bg-light" th:text="${app.additionalInfo != null ? app.additionalInfo : 'No additional information provided'}"></div>
                             </div>
                         </div>
                     </div>
@@ -80,7 +81,7 @@
         <div class="col-md-4 mb-4">
             <div class="square-wrapper">
                 <div class="square-content">
-                    <img th:src="${pet.petPhotoUrl}"
+                    <img th:src="${app.pet.petPhotoUrl}"
                          alt="Pet Photo"
                          class="img-fluid"
                          style="width: 100%; height: 100%; object-fit: cover;">
@@ -93,37 +94,37 @@
         <div class="row g-2">
             <div class="col-sm-6">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" class="form-control form-control-lg" th:value="${pet.petName}" readonly>
+                <input type="text" id="name" class="form-control form-control-lg" th:value="${app.pet.petName}" readonly>
             </div>
 
             <div class="col-sm-6">
                 <label for="species" class="form-label">Species</label>
-                <input type="text" id="species" class="form-control form-control-lg" th:value="${pet.petType}" readonly>
+                <input type="text" id="species" class="form-control form-control-lg" th:value="${app.pet.petType}" readonly>
             </div>
 
             <div class="col-sm-6">
                 <label for="breed" class="form-label">Breed</label>
-                <input type="text" id="breed" class="form-control form-control-lg" th:value="${pet.petBreed}" readonly>
+                <input type="text" id="breed" class="form-control form-control-lg" th:value="${app.pet.petBreed}" readonly>
             </div>
 
             <div class="col-sm-6">
                 <label for="age" class="form-label">Age</label>
-                <input type="text" id="age" class="form-control form-control-lg" th:value="${pet.age}" readonly>
+                <input type="text" id="age" class="form-control form-control-lg" th:value="${app.pet.age}" readonly>
             </div>
 
             <div class="col-sm-6">
                 <label for="date_pet_sheltered" class="form-label">Date Sheltered</label>
                 <input type="date" id="date_pet_sheltered" class="form-control form-control-lg"
-                       th:value="${pet.datePetSheltered}" readonly>
+                       th:value="${app.pet.datePetSheltered}" readonly>
             </div>
 
             <div class="col-sm-6">
                 <label for="availability" class="form-label">Availability</label>
                 <div class="form-control form-control-lg d-flex align-items-center">
                         <span class="badge" id="availability"
-                              th:classappend="${pet.availability == 'ADOPTED'} ? 'bg-danger' :
-                                          (${pet.availability == 'RESERVED'} ? 'bg-warning text-dark' : 'bg-success')"
-                              th:text="${pet.availability}">AVAILABLE</span>
+                              th:classappend="${app.pet.availability == 'ADOPTED'} ? 'bg-danger' :
+                                          (${app.pet.availability == 'RESERVED'} ? 'bg-warning text-dark' : 'bg-success')"
+                              th:text="${app.pet.availability}">AVAILABLE</span>
                 </div>
             </div>
         </div>
@@ -133,22 +134,22 @@
         <div class="col-sm-8">
             <label for="sociability" class="form-label">Sociability</label>
             <input type="text" id="sociability" class="form-control form-control-lg"
-                   th:value="${pet.sociability}" readonly>
+                   th:value="${app.pet.sociability}" readonly>
         </div>
         <div class="col-sm-8">
             <label for="specialNeeds" class="form-label">Special Needs</label>
             <input type="text" id="specialNeeds" class="form-control form-control-lg"
-                   th:value="${pet.specialNeeds}" readonly>
+                   th:value="${app.pet.specialNeeds}" readonly>
         </div>
         <div class="col-sm-8">
             <label for="healthIssues" class="form-label">Health Issues</label>
             <input type="text" id="healthIssues" class="form-control form-control-lg"
-                   th:value="${pet.healthIssues}" readonly>
+                   th:value="${app.pet.healthIssues}" readonly>
         </div>
 
         <div class="col-12 mt-3">
             <label for="about" class="form-label">Bio</label>
-            <textarea id="about" rows="5" class="form-control" placeholder="Bio" readonly th:text="${pet.about}"></textarea>
+            <textarea id="about" rows="5" class="form-control" placeholder="Bio" readonly th:text="${app.pet.about}"></textarea>
         </div>
 
     </div>
@@ -161,7 +162,7 @@
         <div class="col-md-4 mb-4">
             <div class="square-wrapper">
                 <div class="square-content">
-                    <img th:src="${user.userPhotoUrl}"
+                    <img th:src="${app.user.userPhotoUrl}"
                          alt="Profile Photo"
                          class="img-fluid"
                          style="width: 100%; height: 100%; object-fit: cover;">
@@ -175,27 +176,27 @@
             <div class="row g-2">
                 <div class="col-sm-6">
                     <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" id="firstName" class="form-control form-control-lg" th:value="${user.firstName}" readonly>
+                    <input type="text" id="firstName" class="form-control form-control-lg" th:value="${app.user.firstName}" readonly>
                 </div>
 
                 <div class="col-sm-6">
                     <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" id="lastName" class="form-control form-control-lg" th:value="${user.lastName}" readonly>
+                    <input type="text" id="lastName" class="form-control form-control-lg" th:value="${app.user.lastName}" readonly>
                 </div>
 
                 <div class="col-sm-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" class="form-control form-control-lg" th:value="${user.email}" readonly>
+                    <input type="email" id="email" class="form-control form-control-lg" th:value="${app.user.email}" readonly>
                 </div>
 
                 <div class="col-sm-6">
                     <label for="petPreference" class="form-label">Pet Preference</label>
-                    <input type="text" id="petPreference" class="form-control form-control-lg" th:value="${user.petPreference}" readonly>
+                    <input type="text" id="petPreference" class="form-control form-control-lg" th:value="${app.user.petPreference}" readonly>
                 </div>
 
                 <div class="col-12 mt-3">
                     <label for="bio" class="form-label">Bio</label>
-                    <textarea id="bio" rows="5" class="form-control" placeholder="Bio" readonly th:text="${user.bio}"></textarea>
+                    <textarea id="bio" rows="5" class="form-control" placeholder="Bio" readonly th:text="${app.user.bio}"></textarea>
                 </div>
             </div>
         </div>

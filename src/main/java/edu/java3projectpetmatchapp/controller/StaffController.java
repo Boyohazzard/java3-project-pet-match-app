@@ -69,15 +69,9 @@ public class StaffController {
     public String viewApplication(@PathVariable Long id, Model model) {
         try {
             Application application = appService.getAppById(id);
-            
-            model.addAttribute("application", application);
-            model.addAttribute("pet", application.getPet());
-            model.addAttribute("user", application.getUser());
+            model.addAttribute("app", application);
             return "staff/application";
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
-            return "redirect:/staff/application";
-        } catch (Exception e) {
             e.printStackTrace();
             return "redirect:/staff/application";
         }

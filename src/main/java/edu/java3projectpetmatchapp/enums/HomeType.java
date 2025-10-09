@@ -2,7 +2,7 @@ package edu.java3projectpetmatchapp.enums;
 
 public enum HomeType {
     CONDO_APARTMENT("One unit among many within a building"),
-    SINGlE_DETACHED("A house or duplex type building"); 
+    SINGLE_DETACHED("A house or duplex type building");
 
     private final String label;
 

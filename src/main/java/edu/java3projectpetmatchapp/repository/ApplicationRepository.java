@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
-    Optional<Application> findAppById(long id);
+    Optional<Application> findAppById(Long id);
     List<Application> findByUser(User user);
     List<Application> findByPet(Pet pet);
 
