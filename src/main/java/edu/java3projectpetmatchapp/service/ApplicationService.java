@@ -2,9 +2,8 @@ package edu.java3projectpetmatchapp.service;
 
 import edu.java3projectpetmatchapp.dto.PetApplicationForm;
 import edu.java3projectpetmatchapp.entity.Application;
-import edu.java3projectpetmatchapp.entity.Pet;
+import edu.java3projectpetmatchapp.enums.ApplicationStatus;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
-import edu.java3projectpetmatchapp.repository.PetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,6 @@ import java.util.NoSuchElementException;
 public class ApplicationService {
 
     private final ApplicationRepository appRepo;
-    private final PetRepository petRepo;
     private final ApplicationCacheService appCacheService;
 
     public Application getAppById(Long id) {
@@ -70,5 +68,12 @@ public class ApplicationService {
         };
 
         return direction == Sort.Direction.DESC ? comparator.reversed() : comparator;
+    }
+
+    public void updateApplicationStatus(Long applicationId, ApplicationStatus newStatus) {
+        Application application = getAppById(applicationId);
+        application.setApplicationStatus(newStatus);
+        appRepo.save(application);
+        appCacheService.evictAllApplications(); // Clear cache after update
     }
 }

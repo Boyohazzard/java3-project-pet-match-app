@@ -4,6 +4,7 @@ import edu.java3projectpetmatchapp.dto.AddPetForm;
 import edu.java3projectpetmatchapp.dto.UpdatePetForm;
 import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
+import edu.java3projectpetmatchapp.enums.ApplicationStatus;
 import edu.java3projectpetmatchapp.enums.PetType;
 import edu.java3projectpetmatchapp.enums.Sociability;
 import edu.java3projectpetmatchapp.service.ApplicationService;
@@ -70,6 +71,7 @@ public class StaffController {
         try {
             Application application = appService.getAppById(id);
             model.addAttribute("app", application);
+            model.addAttribute("applicationStatuses", ApplicationStatus.values());
             return "staff/application";
         } catch (NoSuchElementException e) {
             e.printStackTrace();
@@ -174,5 +176,20 @@ public class StaffController {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting pet and associated data: " + e.getMessage());
         }
         return "redirect:/staff/dashboard";
+    }
+
+    @PreAuthorize("hasRole('STAFF')")
+    @PostMapping("/application/{id}/update-status")
+    public String updateApplicationStatus(@PathVariable Long id, 
+                                        @RequestParam("status") ApplicationStatus status,
+                                        RedirectAttributes redirectAttributes) {
+        try {
+            appService.updateApplicationStatus(id, status);
+            redirectAttributes.addFlashAttribute("successMessage", "Application status updated successfully to " + status);
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("errorMessage", "Error updating application status: " + e.getMessage());
+        }
+        return "redirect:/staff/application/" + id;
     }
 }
