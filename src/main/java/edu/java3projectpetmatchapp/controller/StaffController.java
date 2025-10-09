@@ -65,7 +65,7 @@ public class StaffController {
     }
 
     @PreAuthorize("hasRole('STAFF')")
-    @GetMapping("/applications/{id}")
+    @GetMapping("/application/{id}")
     public String viewApplication(@PathVariable Long id, Model model) {
         try {
             Application application = appService.getAppById(id);
@@ -75,10 +75,11 @@ public class StaffController {
             model.addAttribute("user", application.getUser());
             return "staff/application";
         } catch (NoSuchElementException e) {
-            return "redirect:/staff/applications?error=Application not found";
+            e.printStackTrace();
+            return "redirect:/staff/application";
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/staff/applications?error=An error occurred while loading the application";
+            return "redirect:/staff/application";
         }
     }
 

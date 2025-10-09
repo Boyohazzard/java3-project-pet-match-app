@@ -4,9 +4,9 @@ import edu.java3projectpetmatchapp.dto.AddPetForm;
 import edu.java3projectpetmatchapp.dto.UpdatePetForm;
 import edu.java3projectpetmatchapp.entity.Application;
 import edu.java3projectpetmatchapp.entity.Pet;
+import edu.java3projectpetmatchapp.enums.PetType;
 import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.PetRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -160,8 +160,10 @@ public class PetService {
             String newUrl = s3Service.uploadPetPhoto(form.getNewPhoto());
             pet.setPetPhotoUrl(newUrl);
         }
-
-
         petRepo.save(pet);
+    }
+
+    public List<Pet> findPetByType(PetType petType) {
+        return petRepo.findByPetType(petType);
     }
 }
