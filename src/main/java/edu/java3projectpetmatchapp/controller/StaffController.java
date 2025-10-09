@@ -70,18 +70,6 @@ public class StaffController {
         try {
             Application application = appService.getAppById(id);
             
-            // Debug: Print application details to see what's actually in the database
-            System.out.println("=== APPLICATION DEBUG INFO ===");
-            System.out.println("Application ID: " + application.getId());
-            System.out.println("Date App Received: " + application.getDateAppReceived());
-            System.out.println("Application Status: " + application.getApplicationStatus());
-            System.out.println("Home Type: " + application.getHometype());
-            System.out.println("Household Situation: " + application.getHouseholdSituation());
-            System.out.println("Other Pets: " + application.getOtherPets());
-            System.out.println("Yard Access: " + application.getYardAccess());
-            System.out.println("Additional Info: " + application.getAdditionalInfo());
-            System.out.println("===============================");
-            
             model.addAttribute("application", application);
             model.addAttribute("pet", application.getPet());
             model.addAttribute("user", application.getUser());
