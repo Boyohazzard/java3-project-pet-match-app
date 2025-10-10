@@ -130,14 +130,38 @@
   What will I do today? made application page made a beautiful index of cards and added profiles
   What impediments are blocking me? the usual typos and details
 
-  2025-10-09
+2025-10-09
 
-  Jonathan
-  What did I do yesterday?
-  What will I do today?
-  What impediments are blocking me?
+Jonathan
+What did I do yesterday?
+What will I do today?
+What impediments are blocking me?
 
-  Elizabeth
-  What did I do yesterday?
-  What will I do today?
-  What impediments are blocking me?
+Elizabeth
+What did I do yesterday?
+What will I do today?
+What impediments are blocking me?
+
+2025-10-10
+
+Jonathan
+What did I do yesterday? Researched Stripe and Ajax. Implemented Ajax for filtering the home page.
+What will I do today? Refactored html layout using fragments.
+What impediments are blocking me? Git conflicts when pushing code.
+
+Elizabeth
+What did I do yesterday? Researched Stripe and started adding to project.
+What will I do today? Continue with Strip tutorial to try and get it working.
+What impediments are blocking me? Complexity of Stripe offerings.
+
+2025-10-11
+
+Jonathan
+What did I do yesterday?
+What will I do today?
+What impediments are blocking me?
+
+Elizabeth
+What did I do yesterday?
+What will I do today?
+What impediments are blocking me?
