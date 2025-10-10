@@ -129,7 +129,6 @@ public class PetService {
         return form;
     }
 
-
     public void updatePet(UpdatePetForm form, Pet pet) throws Exception {
         pet.setPetName(form.getPetName());
         pet.setPetType(form.getPetType());
@@ -163,7 +162,46 @@ public class PetService {
         petRepo.save(pet);
     }
 
-    public List<Pet> findPetByType(PetType petType) {
-        return petRepo.findByPetType(petType);
+    public List<Pet> getFilteredPets(String type, String age, String datePetSheltered) {
+        List<Pet> pets = getAllPets();
+
+        if (type != null && !type.isBlank() && !"ALL".equalsIgnoreCase(type)) {
+            try {
+                PetType typeEnum = PetType.valueOf(type.toUpperCase());
+                pets = pets.stream()
+                        .filter(p -> p.getPetType() == typeEnum)
+                        .toList();
+            } catch (IllegalArgumentException e) {
+                return List.of();
+            }
+        }
+
+        if (age != null && !age.isBlank()) {
+            pets = switch (age.toLowerCase()) {
+                case "younger" -> pets.stream()
+                        .filter(p -> p.getAge() <= 2)
+                        .toList();
+                case "older" -> pets.stream()
+                        .filter(p -> p.getAge() >= 6)
+                        .toList();
+                case "adult" -> pets.stream()
+                        .filter(p -> p.getAge() > 2 && p.getAge() < 7)
+                        .toList();
+                default -> pets;
+            };
+        }
+
+        if (datePetSheltered != null && !datePetSheltered.isBlank()) {
+            Comparator<Pet> comparator = Comparator.comparing(Pet::getDatePetSheltered, Comparator.nullsLast(Comparator.naturalOrder()));
+
+            if (datePetSheltered.equalsIgnoreCase("asc")) {
+                comparator = comparator.reversed();
+            }
+
+            pets = pets.stream()
+                    .sorted(comparator)
+                    .toList();
+        }
+        return pets;
     }
 }
