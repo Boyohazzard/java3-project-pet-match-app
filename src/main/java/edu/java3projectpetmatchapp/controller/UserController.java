@@ -230,21 +230,14 @@ public class UserController {
 
     //ajax test
     @GetMapping("/pets/filter")
-    public String filterPets(@RequestParam(required = false) String petType, Model model) {
-        List<Pet> pets;
-        if (petType == null || petType.isBlank()) {
-            pets = petService.getAllPets();
-        } else {
-            try {
-                PetType typeEnum = PetType.valueOf(petType.toUpperCase());
-                pets = petService.findPetByType(typeEnum);
-            } catch (IllegalArgumentException e) {
-                pets = List.of();
-            }
-        }
-
+    public String filterPets(
+            @RequestParam(required = false) String petType,
+            @RequestParam(required = false) String petAge,
+            @RequestParam(required = false) String datePetSheltered,
+            Model model
+    ) {
+        List<Pet> pets = petService.getFilteredPets(petType, petAge, datePetSheltered);
         model.addAttribute("pets", pets);
         return "fragments/pet_cards.html :: petcards";
     }
-
 }

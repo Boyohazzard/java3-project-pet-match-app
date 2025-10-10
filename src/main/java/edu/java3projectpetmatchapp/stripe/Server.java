@@ -1,4 +1,4 @@
-package edu.java3projectpetmatchapp.stripe;
+/*package edu.java3projectpetmatchapp.stripe;
 
 import java.nio.file.Paths;
 import java.util.Map;
@@ -64,3 +64,5 @@ public class Server {
     }, gson::toJson);
   }
 }
+
+ */
