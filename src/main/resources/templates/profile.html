@@ -76,6 +76,13 @@
                       th:classappend="${app.applicationStatus == 'APPROVED'} ? 'bg-danger' :
                 (${app.applicationStatus == 'REJECTED'} ? 'bg-warning text-dark' : 'bg-success')"
                       th:text="${app.applicationStatus}">application_status</span>
+
+                <!-- Payment Button (Hidden unless status = APPROVED) -->
+                <a th:if="${app.applicationStatus.name() == 'APPROVED'}"
+                   th:href="@{/payment/checkout(appId=${app.id}, adopterEmail=${user.email}, petName=${app.pet.getPetName()})}"
+                   class="btn btn-sm btn-warning fw-bold">
+                    Pay Adoption Fee ($100)
+                </a>
             </div>
 
         </div>

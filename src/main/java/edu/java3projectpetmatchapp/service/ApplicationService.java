@@ -7,6 +7,7 @@ import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -75,5 +76,15 @@ public class ApplicationService {
         application.setApplicationStatus(newStatus);
         appRepo.save(application);
         appCacheService.evictAllApplications(); // Clear cache after update
+    }
+
+    // In PetService.java (or ApplicationService if you create one)
+
+    @Transactional
+    public void updateApplicationStatus(Long applicationId, String status) {
+        Application app = appRepo.findById(applicationId)
+                .orElseThrow(() -> new NoSuchElementException("Application not found."));
+        app.setApplicationStatus(edu.java3projectpetmatchapp.enums.ApplicationStatus.valueOf(status));
+        appRepo.save(app);
     }
 }

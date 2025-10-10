@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
     <meta charset="utf-8" />
-    <title>Accept a payment</title>
-    <meta name="description" content="A demo of a payment on Stripe" />
+    <title>Pay Adoption Fee</title>
+    <meta name="description" content="Stripe Checkout Payment" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="../../../../../../../Downloads/stripe-sample-code/public/style.css" />
-    <script src="https://js.stripe.com/clover/stripe.js"></script>
-    <script src="checkout.js" defer></script>
-  </head>
-  <body>
-    <!-- Display a payment form -->
-      <div id="checkout">
-        <!-- Checkout will insert the payment form here -->
-      </div>
-  </body>
+    <link rel="stylesheet" th:href="@{/stripe/style.css}" />
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<h2>Pay Adoption Fee</h2>
+<p th:text="'Pet: ' + ${petName}"></p>
+<button id="checkout-button">Proceed to Payment</button>
+
+<input type="hidden" id="adopterEmail" th:value="${adopterEmail}">
+<input type="hidden" id="petName" th:value="${petName}">
+<input type="hidden" id="applicationId" th:value="${appId}">
+
+<script src="/stripe/checkout.js" defer></script>
+</body>
 </html>
