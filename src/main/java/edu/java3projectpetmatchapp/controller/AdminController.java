@@ -7,6 +7,7 @@ import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,17 +27,23 @@ public class AdminController {
     private final CustomUserDetailsService userService;
 
     @GetMapping("/users-list")
-    public String showUserList(@RequestParam(defaultValue = "id") String sort,
+    public String showUserList(@RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "15") int size,
+                               @RequestParam(defaultValue = "id") String sort,
                                @RequestParam(defaultValue = "asc") String dir,
                                Model model) {
 
+
         Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Page<User> users = userService.getUsersSortedAndPaginated(sort, direction, page, size);
 
-        List<User> users = userService.getAllUsersSorted(sort, direction);
-
-        model.addAttribute("users", users);
-        model.addAttribute("sort", sort);
-        model.addAttribute("dir", dir);
+        model.addAttribute("users", users.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", users.getTotalPages());
+        model.addAttribute("totalItems", users.getTotalElements());
+        model.addAttribute("sortField", sort);
+        model.addAttribute("sortDir", direction.toString());
+        model.addAttribute("reverseSortDir", direction == Sort.Direction.ASC ? "DESC" : "ASC");
         return "admin/users-list";
     }
 
@@ -68,7 +75,7 @@ public class AdminController {
         return "admin/update-user-role";
     }
 
-    @CacheEvict(value = "allUserss", allEntries = true)
+    @CacheEvict(value = "allUsers", allEntries = true)
     @PostMapping("/user/{id}/edit-role")
     public String handleRoleUpdate(
             @PathVariable Long id,

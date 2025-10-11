@@ -10,6 +10,9 @@ import edu.java3projectpetmatchapp.repository.ApplicationRepository;
 import edu.java3projectpetmatchapp.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,10 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -142,6 +142,24 @@ public class CustomUserDetailsService implements UserDetailsService {
         users.sort(getComparator(sortField, direction));
         return users;
     }
+    public Page<User> getUsersSortedAndPaginated(String sortField, Sort.Direction direction, int page, int size) {
+        List<User> users = new ArrayList<>(userCacheService.getAllUsers());
+
+        if (!isValidSortField(sortField)) {
+            sortField = "id";
+        }
+
+        users.sort(getComparator(sortField, direction));
+
+        int start = page * size;
+        int end = Math.min(start + size, users.size());
+
+        List<User> pageContent = (start > end) ? Collections.emptyList() : users.subList(start, end);
+
+        return new PageImpl<>(pageContent, PageRequest.of(page, size, Sort.by(direction, sortField)), users.size());
+    }
+
+
 
     private boolean isValidSortField(String field) {
         return List.of("id", "email", "role").contains(field);

@@ -15,7 +15,7 @@
                         (<span th:text="${user.email}"></span>)
                     </div>
 
-                    <form th:action="@{/admin/user/{id}/edit(id=${user.id})}" method="post"
+                    <form th:action="@{/admin/user/{id}/edit-role(id=${user.id})}" method="post"
                           th:object="${userRoleUpdateDto}">
 
                         <!-- Global Error/Success Messaging -->
