@@ -22,22 +22,19 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(registry -> {
-                    registry.requestMatchers("/index", "/", "/home", "/register", "/login", "/error").permitAll();
+                    registry.requestMatchers("/","/index","/home", "/pet/**","/register","/login").permitAll();
                     registry.requestMatchers("/css/**", "/js/**", "/images/**").permitAll();
-                    registry.requestMatchers(HttpMethod.GET, "/register").permitAll();
-                    registry.requestMatchers(HttpMethod.POST, "/register").permitAll();
-                    registry.requestMatchers(HttpMethod.GET, "/pet/*").permitAll();
-                    registry.requestMatchers("/admin/**").hasRole("ADMIN");
-                    registry.requestMatchers("/staff/**").hasRole("STAFF");
+                    registry.requestMatchers("/admin/**").hasAnyRole("ADMIN", "STAFF", "USER");
+                    registry.requestMatchers("/staff/**").hasAnyRole("STAFF", "USER");
+                    registry.requestMatchers("/user/**").hasRole("USER");
                     registry.anyRequest().authenticated();
-
                 })
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .successHandler(customSuccessHandler())
                         .failureUrl("/login?error")
-                        //.defaultSuccessUrl("/index", true)
+                        .defaultSuccessUrl("/index", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -45,6 +42,9 @@ public class SecurityConfiguration {
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .permitAll()
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/error/403")
                 )
                 .build();
     }

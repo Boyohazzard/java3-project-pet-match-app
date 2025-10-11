@@ -1,32 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Applications list</title>
-
-        <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-        <head th:replace="~{fragments/header.html :: header-head}">
-        <title>Admin Dashboard - User Management</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/layout.html :: layout(~{::body}, 'Staff Applications List')}">
 <body>
-
-<div th:replace="~{fragments/header.html :: header-nav}"></div>
-
-<main class="container mt-5 mb-5">
 
     <h1 class="display-5 mb-4 text-center">Applications list</h1>
     <p class="text-center text-muted">Manage all applications</p>
-    <a th:href="@{dashboard}" class="btn btn-outline-info">back to pet list</a>
+    <a th:href="@{pets-list}" class="btn btn-outline-info">back to pet list</a>
     <div class="row justify-content-center">
         <div class="col-lg-10">
 
             <table class="table table-hover table-striped shadow-sm rounded">
                 <thead class="table-dark">
                 <tr>
-                    <th th:replace="~{fragments/tablesort :: appsortableHeader('email', 'Email')}"></th>
-                    <th th:replace="~{fragments/tablesort :: appsortableHeader('petName', 'Pet Name')}"></th>
-                    <th th:replace="~{fragments/tablesort :: appsortableHeader('dateAppReceived', 'Date received')}"></th>
-                    <th th:replace="~{fragments/tablesort :: appsortableHeader('status', ' Application Status')}"></th>
+                    <th th:replace="~{layout/fragments :: appsortableHeader('email', 'Email')}"></th>
+                    <th th:replace="~{layout/fragments :: appsortableHeader('petName', 'Pet Name')}"></th>
+                    <th th:replace="~{layout/fragments :: appsortableHeader('dateAppReceived', 'Date received')}"></th>
+                    <th th:replace="~{layout/fragments :: appsortableHeader('status', ' Application Status')}"></th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -68,12 +58,12 @@
                     <div class="modal-body">
                         <p>Are you sure you want to permanently delete application:
                             <strong th:text="${app.id} + ' (' + ${app.dateAppReceived} + ')'"></strong>?</p>
-                        <p class="text-danger small">This action cannot be undone and will delete all associated applications.</p>
+                        <p class="text-danger small">This action cannot be undone</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <!-- <form th:action="@{/staff/users/{id}/delete(id=${pet.id})}" method="post"> -->
-                            <button type="submit" class="btn btn-danger">Delete Pet</button>
+                        <form th:action="@{/staff/application/{id}/delete(id=${app.id})}" method="post">
+                            <button type="submit" class="btn btn-danger">Delete Application</button>
                         </form>
                     </div>
                 </div>
@@ -81,14 +71,4 @@
         </div>
     </div>
 
-</main>
-
-<div th:replace="~{fragments/footer.html :: footer-fragment}"></div>
-
 </body>
-</html></title>
-</head>
-<body>
-
-</body>
-</html>

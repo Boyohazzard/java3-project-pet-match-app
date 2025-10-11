@@ -1,20 +1,14 @@
 <!DOCTYPE html>
-
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/header.html :: header-head}">
-    <title>Admin Dashboard - User Management</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/layout.html :: layout(~{::body}, 'Staff Pets List')}">
 <body>
 
-<div th:replace="~{fragments/header.html :: header-nav}"></div>
-
-<main class="container mt-5 mb-5">
-
-    <h1 class="display-5 mb-4 text-center">Staff Dashboard</h1>
+    <h1 class="display-5 mb-4 text-center">Staff Pets List</h1>
     <p class="text-center text-muted">Manage all pets profiles, and user applications</p>
 
-    <a th:href="@{addpet}" class="btn btn-outline-info">Add New Pet</a>
-    <a th:href="@{applications}" class="btn btn-outline-info">view all applications</a>
+    <a th:href="@{create-pet}" class="btn btn-outline-info">Add New Pet</a>
+    <a th:href="@{applications-list}" class="btn btn-outline-info">view all applications</a>
     <div class="row justify-content-center">
         <div class="col-lg-10">
 
@@ -23,10 +17,10 @@
             <table class="table table-hover table-striped shadow-sm rounded">
                 <thead class="table-dark">
                 <tr>
-                    <th th:replace="~{fragments/tablesort :: petsortableHeader('id', 'ID')}"></th>
-                    <th th:replace="~{fragments/tablesort :: petsortableHeader('petName', 'Pet Name')}"></th>
-                    <th th:replace="~{fragments/tablesort :: petsortableHeader('datePetSheltered', 'Date Sheltered')}"></th>
-                    <th th:replace="~{fragments/tablesort :: petsortableHeader('availability', 'Availability')}"></th>
+                    <th th:replace="~{layout/fragments :: petsortableHeader('id', 'ID')}"></th>
+                    <th th:replace="~{layout/fragments :: petsortableHeader('petName', 'Pet Name')}"></th>
+                    <th th:replace="~{layout/fragments :: petsortableHeader('datePetSheltered', 'Date Sheltered')}"></th>
+                    <th th:replace="~{layout/fragments :: petsortableHeader('availability', 'Availability')}"></th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -45,7 +39,7 @@
                     <td>
                         <div class="btn-group btn-group-sm" role="group">
                             <a th:href="@{/pet/{id}(id=${pet.id})}" class="btn btn-outline-info">View Pet</a>
-                            <a th:href="@{/staff/updatepet(id=${pet.id})}" class="btn btn-outline-secondary">Edit Pet</a>
+                            <a th:href="@{/staff/edit-pet(id=${pet.id})}" class="btn btn-outline-secondary">Edit Pet</a>
 
                             <!-- <a th:href="@{/admin/users/{id}/edit(id=${user.id})}" class="btn btn-outline-secondary">View Applications</a> -->
 
@@ -83,9 +77,4 @@
         </div>
     </div>
 
-</main>
-
-<div th:replace="~{fragments/footer.html :: footer-fragment}"></div>
-
 </body>
-</html>

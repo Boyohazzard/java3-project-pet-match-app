@@ -32,6 +32,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final S3StorageService s3Service;
     private final UserCacheService userCacheService;
 
+    public List<User> getAllUsers(){
+        return userRepo.findAll();
+    }
+
     public void registerNewUser(RegistrationForm form) {
         if (!form.getPassword().equals(form.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match.");
@@ -109,10 +113,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         userRepo.save(user);
     }
-
-    //public List<User> getAllUsers(){
-    //    return userRepo.findAll();
-    //}
 
     public Optional<User> getUserEntityById(Long id){
         return userRepo.findById(id);

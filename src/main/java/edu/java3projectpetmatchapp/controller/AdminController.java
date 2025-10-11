@@ -1,5 +1,6 @@
 package edu.java3projectpetmatchapp.controller;
 
+import edu.java3projectpetmatchapp.dto.ProfileData;
 import edu.java3projectpetmatchapp.dto.UserRoleUpdateDto;
 import edu.java3projectpetmatchapp.entity.User;
 import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
@@ -7,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +25,7 @@ public class AdminController {
 
     private final CustomUserDetailsService userService;
 
-    @GetMapping("/dashboard")
+    @GetMapping("/users-list")
     public String showUserList(@RequestParam(defaultValue = "id") String sort,
                                @RequestParam(defaultValue = "asc") String dir,
                                Model model) {
@@ -35,10 +37,21 @@ public class AdminController {
         model.addAttribute("users", users);
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
-        return "admin_dashboard";
+        return "admin/users-list";
     }
 
-    @GetMapping("/users/{id}/edit")
+    @GetMapping("/user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String showOtherProfile(@PathVariable Long id, Model model) {
+        User targetUser = userService.getUserEntityById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found."));
+        ProfileData profileData = userService.getProfileData(targetUser.getEmail());
+        model.addAttribute("user", profileData.getUser());
+        model.addAttribute("applications", profileData.getApplications());
+        return "user/profile";
+    }
+
+    @GetMapping("/user/{id}/edit-role")
     public String showEditRoleForm(@PathVariable Long id, Model model){
 
         User userEntity = userService.getUserEntityById(id)
@@ -52,11 +65,11 @@ public class AdminController {
 
         model.addAttribute("user", userEntity);
         model.addAttribute("userRoleUpdateDto", form);
-        return "admin_user_edit";
+        return "admin/update-user-role";
     }
 
     @CacheEvict(value = "allUserss", allEntries = true)
-    @PostMapping("/users/{id}/edit")
+    @PostMapping("/user/{id}/edit-role")
     public String handleRoleUpdate(
             @PathVariable Long id,
             @ModelAttribute("userRoleUpdateDto") @Valid UserRoleUpdateDto form,
@@ -68,7 +81,7 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRoleUpdateDto", result);
             redirectAttributes.addFlashAttribute("userRoleUpdateDto", form);
 
-            return "redirect:/admin/users/{id}/edit";
+            return "redirect:/admin/user/{id}/edit";
         }
 
         try {
@@ -81,11 +94,11 @@ public class AdminController {
             // Catches transaction errors or other system issues
             redirectAttributes.addFlashAttribute("errorMessage", "Error updating role: " + e.getMessage());
         }
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/users-list";
     }
 
     @CacheEvict(value = "allUserss", allEntries = true)
-    @PostMapping("/users/{id}/delete")
+    @PostMapping("/user/{id}/delete")
     public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             userService.deleteUser(id);
@@ -95,6 +108,6 @@ public class AdminController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting user and associated data: " + e.getMessage());
         }
-        return "redirect:/admin/dashboard";
+        return "redirect:/admin/users-list";
     }
 }

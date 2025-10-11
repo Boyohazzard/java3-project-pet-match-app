@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/layout.html :: layout(~{::body}, 'Home - Pets, Pets, and More Pets')}">
+<body>
+
+<div>
+    <div class="jumbotron text-center">
+        <h1 class="mb-0 text-dark">Welcome to Pets, Pets, and More Pets!</h1>
+        <small class="lead">Our mission is to inspire you to adopt (not shop for) your next furry family member.</small>
+    </div>
+
+            <form id="filterForm"
+                  hx-get="/pet/filter"
+                  hx-target="#pet_cards"
+                  hx-trigger="change from:select"
+                  hx-include="#filterForm">
+                <label for="petType">Animal Type</label>
+                <select name="petType" id="petType">
+                    <option value="ALL">All</option>
+                    <option value="DOG">Dog</option>
+                    <option value="CAT">Cat</option>
+                </select>
+
+                <label for="petAge">Age</label>
+                <select name="petAge" id="petAge">
+                    <option value="All">All</option>
+                    <option value="Younger">Younger</option>
+                    <option value="Adult">Adult</option>
+                    <option value="Older">Older</option>
+                </select>
+
+                <label for="datePetSheltered">Date Sheltered</label>
+                <select name="datePetSheltered" id="datePetSheltered">
+                    <option value="All">All</option>
+                    <option value="Recent">Recent addition</option>
+                    <option value="Veteran">Veteran pets</option>
+                </select>
+            </form>
+
+            <div id="pet_cards" th:insert="~{layout/fragments.html :: petcards(pets=${pets})}"></div>
+        </div>
+    </body>

@@ -35,7 +35,9 @@ public class StaffController {
     private final ApplicationService appService;
     private final edu.java3projectpetmatchapp.service.S3StorageService s3Service;
 
-    @GetMapping("/dashboard")
+
+    @PreAuthorize("hasRole('STAFF')")
+    @GetMapping("/pets-list")
     public String showStaffDashboard(@RequestParam(defaultValue = "id") String sort,
                                      @RequestParam(defaultValue = "asc") String dir,
                                      Model model) {
@@ -47,59 +49,30 @@ public class StaffController {
         model.addAttribute("pets", pets);
         model.addAttribute("sort", sort);
         model.addAttribute("dir", dir);
-        return "staff/dashboard";
-    }
-
-    @GetMapping("/applications")
-    public String showStaffApplications(@RequestParam(defaultValue = "id") String sort,
-                                        @RequestParam(defaultValue = "asc") String dir,
-                                        Model model) {
-
-        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-
-        List<Application> applications = appService.getAllApplicationsSorted(sort, direction);
-
-        model.addAttribute("applications", applications);
-        model.addAttribute("sort", sort);
-        model.addAttribute("dir", dir);
-        return "staff/application_list";
+        return "staff/pets-list";
     }
 
     @PreAuthorize("hasRole('STAFF')")
-    @GetMapping("/application/{id}")
-    public String viewApplication(@PathVariable Long id, Model model) {
-        try {
-            Application application = appService.getAppById(id);
-            model.addAttribute("app", application);
-            model.addAttribute("applicationStatuses", ApplicationStatus.values());
-            return "staff/application";
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
-            return "redirect:/staff/application";
-        }
-    }
-
-    @PreAuthorize("hasRole('STAFF')")
-    @GetMapping("/addpet")
+    @GetMapping("/create-pet")
     public String showAddPetForm(Model model) {
         model.addAttribute("addPetForm", new AddPetForm());
         model.addAttribute("petTypes", PetType.values());
         model.addAttribute("sociabilityOptions", Sociability.values());
         model.addAttribute("defaultPetPhotoUrl", s3Service.getDefaultPetPhotoUrl());
-        return "staff/addpet";
+        return "staff/create-pet";
     }
 
     @CacheEvict(value = "allPets", allEntries = true)
-    @PreAuthorize("hasAnyRole('STAFF')")
-    @PostMapping("/addpet")
-    public String addPet(
+    @PreAuthorize("hasRole('STAFF')")
+    @PostMapping("/create-pet")
+    public String createPet(
             @ModelAttribute("addPetForm") @Valid AddPetForm form,
             BindingResult result,
             Model model) {
         if (result.hasErrors()) {
             model.addAttribute("petTypes", PetType.values());
             model.addAttribute("sociabilityOptions", Sociability.values());
-            return "staff/addpet";
+            return "staff/create-pet";
         }
         try {
             petService.registerNewPet(form);
@@ -108,13 +81,13 @@ public class StaffController {
             model.addAttribute("petTypes", PetType.values());
             model.addAttribute("sociabilityOptions", Sociability.values());
             model.addAttribute("error", "An error occurred while saving the pet.");
-            return "staff/addpet";
+            return "staff/create-pet";
         }
-        return "redirect:dashboard";
+        return "redirect:staff/pets-list";
     }
 
-    @PreAuthorize("hasAnyRole('STAFF')")
-    @GetMapping("/updatepet")
+    @PreAuthorize("hasRole('STAFF')")
+    @GetMapping("/edit-pet")
     public String showUpdatePetPage(@RequestParam("id") Long id, Model model) {
         Pet pet = petService.getPetById(id);
         UpdatePetForm form = petService.convertPetToForm(pet);
@@ -123,12 +96,12 @@ public class StaffController {
         model.addAttribute("currentPetPhotoUrl", pet.getPetPhotoUrl());
         model.addAttribute("petTypes", PetType.values());
         model.addAttribute("sociabilityOptions", Sociability.values());
-        return "staff/updatepet";
+        return "staff/edit-pet";
     }
 
     @CacheEvict(value = "allPets", allEntries = true)
-    @PreAuthorize("hasAnyRole('STAFF')")
-    @PostMapping("/updatepet")
+    @PreAuthorize("hasRole('STAFF')")
+    @PostMapping("/edit-pet")
     public String UpdatePet(
             @ModelAttribute("updatePetForm") @Valid UpdatePetForm form,
             BindingResult result,
@@ -146,7 +119,7 @@ public class StaffController {
             model.addAttribute("petTypes", PetType.values());
             model.addAttribute("sociabilityOptions", Sociability.values());
             reloadPhotoUrl.run();
-            return "staff/updatepet";
+            return "staff/edit-pet";
         }
         try {
             Pet petToUpdate = petService.getPetById(form.getId());
@@ -158,13 +131,13 @@ public class StaffController {
             model.addAttribute("sociabilityOptions", Sociability.values());
             reloadPhotoUrl.run();
             model.addAttribute("error", "An error occurred while saving the pet.");
-            return "staff/updatepet";
+            return "edit-pet";
         }
-        return "redirect:/staff/dashboard";
+        return "redirect:/staff/pets-list";
     }
 
     @CacheEvict(value = "allPets", allEntries = true)
-    @PreAuthorize("hasAnyRole('STAFF')")
+    @PreAuthorize("hasRole('STAFF')")
     @PostMapping("/pet/{id}/delete")
     public String deletePet(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -175,9 +148,40 @@ public class StaffController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error deleting pet and associated data: " + e.getMessage());
         }
-        return "redirect:/staff/dashboard";
+        return "redirect:/staff/pets-list";
     }
 
+    @PreAuthorize("hasRole('STAFF')")
+    @GetMapping("/applications-list")
+    public String showStaffApplications(@RequestParam(defaultValue = "id") String sort,
+                                        @RequestParam(defaultValue = "asc") String dir,
+                                        Model model) {
+
+        Sort.Direction direction = dir.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        List<Application> applications = appService.getAllApplicationsSorted(sort, direction);
+
+        model.addAttribute("applications", applications);
+        model.addAttribute("sort", sort);
+        model.addAttribute("dir", dir);
+        return "staff/applications-list";
+    }
+
+    @PreAuthorize("hasRole('STAFF')")
+    @GetMapping("/application/{id}")
+    public String viewApplication(@PathVariable Long id, Model model) {
+        try {
+            Application application = appService.getAppById(id);
+            model.addAttribute("app", application);
+            model.addAttribute("applicationStatuses", ApplicationStatus.values());
+            return "staff/application-review";
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            return "redirect:/staff/application";
+        }
+    }
+
+    @CacheEvict(value = "allApplications", allEntries = true)
     @PreAuthorize("hasRole('STAFF')")
     @PostMapping("/application/{id}/update-status")
     public String updateApplicationStatus(@PathVariable Long id, 
@@ -191,5 +195,20 @@ public class StaffController {
             redirectAttributes.addFlashAttribute("errorMessage", "Error updating application status: " + e.getMessage());
         }
         return "redirect:/staff/application/" + id;
+    }
+
+    @CacheEvict(value = "allApplications", allEntries = true)
+    @PreAuthorize("hasRole('STAFF')")
+    @PostMapping("/application/{id}/delete")
+    public String deleteApplication(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            appService.deleteApplication(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Application deleted successfully.");
+        } catch (UsernameNotFoundException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Application not found.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting Application: " + e.getMessage());
+        }
+        return "redirect:/staff/applications-list";
     }
 }

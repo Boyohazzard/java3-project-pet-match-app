@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{fragments/header.html :: header-head}">
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/layout.html :: layout(~{::body}, 'Home - Pets, Pets, and More Pets')}">
 <body>
 
-<div th:replace="~{fragments/header.html :: header-nav}"></div>
 
-<main class="container mt-4 mb-5" style="padding-top: 30px;">
     <div class="row mb-4">
         <div class="col-12">
-            <a th:href="@{/staff/applications}" class="btn btn-outline-info">← Back to Applications List</a>
+            <a th:href="@{/staff/applications-list}" class="btn btn-outline-info">← Back to Applications List</a>
         </div>
     </div>
 
@@ -296,4 +294,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>
-</html>

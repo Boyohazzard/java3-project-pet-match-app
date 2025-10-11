@@ -2,7 +2,6 @@ package edu.java3projectpetmatchapp.controller;
 
 import edu.java3projectpetmatchapp.dto.PetApplicationForm;
 import edu.java3projectpetmatchapp.dto.ProfileData;
-import edu.java3projectpetmatchapp.dto.RegistrationForm;
 import edu.java3projectpetmatchapp.dto.UserProfileUpdateForm;
 import edu.java3projectpetmatchapp.entity.Pet;
 import edu.java3projectpetmatchapp.entity.User;
@@ -12,18 +11,17 @@ import edu.java3projectpetmatchapp.service.CustomUserDetailsService;
 import edu.java3projectpetmatchapp.service.PetService;
 import edu.java3projectpetmatchapp.service.S3StorageService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
 
+@RequiredArgsConstructor
 @Controller
 public class UserController {
 
@@ -32,72 +30,22 @@ public class UserController {
     private final PetService petService;
     private final ApplicationService appService;
 
-    // Required for 'final' fields.
-    public UserController(CustomUserDetailsService userService,
-                          S3StorageService s3Service,
-                          PetService petService,
-                          ApplicationService appService) {
-        this.userService = userService;
-        this.s3Service = s3Service;
-        this.petService = petService;
-        this.appService = appService;
+    @GetMapping("/user/profile")
+    public String showOwnProfile(Model model, Principal principal) {
+        String targetEmail = principal.getName();
+        ProfileData profileData = userService.getProfileData(targetEmail);
+        model.addAttribute("user", profileData.getUser());
+        model.addAttribute("applications", profileData.getApplications());
+        return "user/profile";
     }
 
-    // routes for everyone \\
-
-    @GetMapping({"/", "/index", "/home"})
-    public String viewIndex(Model model) {
-        model.addAttribute("pets", petService.getAllPets());
-        return "index";
-    }
-
-    @GetMapping("/login")
-    public String viewLogin() {
-        return "login";
-    }
-
-    //I have this here so there can be a popup or warning before logging out. Maybe it doesn't need to be its own page though
-    @GetMapping("/logout")
-    public String viewLogout() {
-        return "logout";
-    }
-
-    // routes for USER \\
-
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("registrationForm", new RegistrationForm());
-        return "register";
-    }
-
-    @CacheEvict(value = "allUsers", allEntries = true)
-    @PostMapping("/register")
-    public String registerUser(
-            @ModelAttribute("registrationForm") @Valid RegistrationForm form,
-            BindingResult result) {
-
-        if (result.hasErrors()) {
-            return "register";
-        }
-
-        try {
-            userService.registerNewUser(form);
-        } catch (IllegalArgumentException e) {
-            result.rejectValue("confirmPassword", "error.confirmPassword", e.getMessage());
-            return "register";
-        }
-
-        return "redirect:/login";
-    }
-
-    @GetMapping({"/profile", "/profile/{id}"})
+    /*@GetMapping({"/profile/{id}"})
     public String showProfile(@PathVariable Optional<Long> id, Model model, Principal principal) {
 
         String targetEmail;
 
         if (id.isPresent()) {
             // Case 1: Admin is viewing another user's profile by ID.
-
             User targetUser = userService.getUserEntityById(id.get())
                     .orElseThrow(() -> new UsernameNotFoundException("Target user not found."));
             targetEmail = targetUser.getEmail();
@@ -110,38 +58,10 @@ public class UserController {
         model.addAttribute("user", profileData.getUser());
         model.addAttribute("applications", profileData.getApplications());
 
-        return "profile";
+        return "user/profile";
     }
 
-    @GetMapping("/pet/{id}")
-    public String viewPet(@PathVariable Long id, Model model) {
-        Pet pet = petService.getPetById(id);
-        model.addAttribute("pet", pet);
-        System.out.println("Getting pet with ID: " + id);
-
-        return "pet/detail";
-    }
-
-    // Profile editing
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/profile/edit")
-    public String showProfileEditForm(Model model, Principal principal) {
-
-        User userEntity = userService.getUserEntityByEmail(principal.getName());
-        UserProfileUpdateForm form = new UserProfileUpdateForm();
-        form.setFirstName(userEntity.getFirstName());
-        form.setLastName(userEntity.getLastName());
-        form.setBio(userEntity.getBio());
-        form.setPetPreference(userEntity.getPetPreference());
-
-        model.addAttribute("user", userEntity);
-
-        model.addAttribute("profileUpdateForm", form);
-
-        model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
-
-        return "profile_edit";
-    }
+     */
 
     @CacheEvict(value = "allUsers", allEntries = true)
     @PostMapping("/profile/edit")
@@ -164,7 +84,7 @@ public class UserController {
             model.addAttribute("user", userEntity);
             model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
 
-            return "profile_edit";
+            return "user/edit-profile";
         }
 
         try {
@@ -176,10 +96,30 @@ public class UserController {
             result.reject("globalError", "Could not save profile due to a system error. Please try again.");
             reloadModel.run();
 
-            return "profile_edit";
+            return "user/edit-profile";
         }
 
-        return "redirect:/profile";
+        return "redirect:/user/profile";
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/profile/edit")
+    public String showProfileEditForm(Model model, Principal principal) {
+
+        User userEntity = userService.getUserEntityByEmail(principal.getName());
+        UserProfileUpdateForm form = new UserProfileUpdateForm();
+        form.setFirstName(userEntity.getFirstName());
+        form.setLastName(userEntity.getLastName());
+        form.setBio(userEntity.getBio());
+        form.setPetPreference(userEntity.getPetPreference());
+
+        model.addAttribute("user", userEntity);
+
+        model.addAttribute("profileUpdateForm", form);
+
+        model.addAttribute("currentPhotoUrl", userEntity.getUserPhotoUrl());
+
+        return "user/edit-profile";
     }
 
     @GetMapping("/pet/{id}/apply")
@@ -198,7 +138,7 @@ public class UserController {
         model.addAttribute("householdSituation", HouseholdSituation.values());
         model.addAttribute("otherPets", OtherPets.values());
 
-        return "pet/apply";
+        return "user/pet-apply";
     }
 
     @CacheEvict(value = "allApplications", allEntries = true)
@@ -213,7 +153,7 @@ public class UserController {
             model.addAttribute("homeType", HomeType.values());
             model.addAttribute("householdSituation", HouseholdSituation.values());
             model.addAttribute("otherPets", OtherPets.values());
-            return "pet/apply";
+            return "user/pet-apply";
         }
         try {
             appService.registerNewApplication(form);
@@ -223,21 +163,8 @@ public class UserController {
             model.addAttribute("householdSituation", HouseholdSituation.values());
             model.addAttribute("otherPets", OtherPets.values());
             model.addAttribute("error", "An error occurred while saving the application.");
-            return "/pet/apply";
+            return "user/pet-apply";
         }
         return "redirect:/pet/" + form.getPet().getId();
-    }
-
-    //ajax test
-    @GetMapping("/pets/filter")
-    public String filterPets(
-            @RequestParam(required = false) String petType,
-            @RequestParam(required = false) String petAge,
-            @RequestParam(required = false) String datePetSheltered,
-            Model model
-    ) {
-        List<Pet> pets = petService.getFilteredPets(petType, petAge, datePetSheltered);
-        model.addAttribute("pets", pets);
-        return "fragments/pet_cards.html :: petcards";
     }
 }
