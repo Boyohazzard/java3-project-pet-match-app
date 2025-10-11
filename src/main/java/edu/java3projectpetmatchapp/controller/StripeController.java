@@ -1,5 +1,6 @@
-package edu.java3projectpetmatchapp.controller;
+/*package edu.java3projectpetmatchapp.controller;
 
+import edu.java3projectpetmatchapp.enums.ApplicationStatus;
 import edu.java3projectpetmatchapp.service.ApplicationService;
 import edu.java3projectpetmatchapp.service.StripeService;
 import com.stripe.model.checkout.Session;
@@ -68,7 +69,7 @@ public class StripeController {
             Session session = stripeService.retrieveSession(sessionId);
 
             if ("complete".equals(session.getStatus())) {
-                applicationService.updateApplicationStatus(applicationId, "PAID_ADOPTION_FEE");
+                applicationService.updateApplicationStatus(applicationId, ApplicationStatus.valueOf("PAID_ADOPTION_FEE"));
             }
 
             model.addAttribute("status", session.getStatus());
@@ -83,3 +84,5 @@ public class StripeController {
     }
 
 }
+
+ */

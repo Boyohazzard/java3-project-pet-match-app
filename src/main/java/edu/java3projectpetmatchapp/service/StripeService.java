@@ -1,4 +1,4 @@
-package edu.java3projectpetmatchapp.service;
+/*package edu.java3projectpetmatchapp.service;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -63,3 +63,5 @@ public class StripeService {
         return Session.retrieve(sessionId);
     }
 }
+
+ */

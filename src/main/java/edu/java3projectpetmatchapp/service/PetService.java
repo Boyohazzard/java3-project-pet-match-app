@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -95,19 +96,26 @@ public class PetService {
         petRepo.save(pet);
     }
 
+    @Transactional
     public void deletePet(Long id) {
         Pet pet = petRepo.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Pet not found."));
 
-        // Remove associated applications
         appRepo.deleteByPet(pet);
 
         // Delete photo if not default
         String currentPhotoUrl = pet.getPetPhotoUrl();
         if (currentPhotoUrl != null && !currentPhotoUrl.isEmpty() &&
                 !currentPhotoUrl.equals(s3Service.getDefaultPetPhotoUrl())) {
-            s3Service.deleteFileFromUrl(currentPhotoUrl);
+            try {
+                s3Service.deleteFileFromUrl(currentPhotoUrl);
+            } catch (Exception e) {
+                // Log error but don't throw further to avoid aborting DB deletion
+                System.err.println("Failed to delete pet photo from S3: " + e.getMessage());
+                // or use a proper logger instead of System.err
+            }
         }
+
 
         petRepo.delete(pet);
     }
